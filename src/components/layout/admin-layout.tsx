@@ -1,0 +1,162 @@
+import { useEffect, useState } from 'react';
+import { NavLink, Navigate, Outlet, useLocation } from 'react-router-dom';
+
+import bdaLogo from '@/assets/bda-logo.jpg';
+import userIcon from '@/assets/user-icon-on-transparent-background-free-png.webp';
+import { useAuth } from '@/features/auth';
+
+import { HeaderDateTime } from './header-date-time';
+import {
+  DashboardIcon,
+  RequestsIcon,
+  UsersIcon,
+} from './sidebar-nav-icons';
+
+export function AdminLayout() {
+  const { user, logout } = useAuth();
+  const location = useLocation();
+  const [navOpen, setNavOpen] = useState(false);
+  const [prevPath, setPrevPath] = useState(location.pathname);
+
+  if (location.pathname !== prevPath) {
+    setPrevPath(location.pathname);
+    setNavOpen(false);
+  }
+
+  useEffect(() => {
+    if (!navOpen) return;
+    function onKeyDown(e: KeyboardEvent) {
+      if (e.key === 'Escape') setNavOpen(false);
+    }
+    window.addEventListener('keydown', onKeyDown);
+    document.body.classList.add('nav-lock');
+    return () => {
+      window.removeEventListener('keydown', onKeyDown);
+      document.body.classList.remove('nav-lock');
+    };
+  }, [navOpen]);
+
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
+
+  return (
+    <div className={`admin-shell${navOpen ? ' nav-open' : ''}`}>
+      <header className="shell-header">
+        <div className="shell-header-left">
+          <button
+            type="button"
+            className="nav-toggle"
+            aria-label={navOpen ? 'Close menu' : 'Open menu'}
+            aria-expanded={navOpen}
+            aria-controls="admin-sidebar"
+            onClick={() => setNavOpen((open) => !open)}
+          >
+            <span className="nav-toggle-bars" aria-hidden="true">
+              <span />
+              <span />
+              <span />
+            </span>
+          </button>
+          <div className="shell-header-brand">
+            <img src={bdaLogo} alt="BDA" className="shell-header-logo" />
+            <div className="shell-header-copy">
+              <span className="shell-header-eyebrow">
+                Bangalore Development Authority
+              </span>
+              <strong className="shell-header-title">
+                BDA Asset &amp; IT Request Management Portal
+              </strong>
+              <span className="shell-header-subtitle">Admin Portal</span>
+            </div>
+          </div>
+        </div>
+        <div className="shell-header-right">
+          <HeaderDateTime />
+
+          <div className="topbar-user shell-header-user">
+            <img src={userIcon} alt="" className="topbar-user-icon" />
+            <div className="topbar-user-meta">
+              <p className="topbar-user-name">{user.name || 'Admin'}</p>
+             
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <button
+        type="button"
+        className="nav-backdrop"
+        aria-label="Close menu"
+        tabIndex={navOpen ? 0 : -1}
+        onClick={() => setNavOpen(false)}
+      />
+
+      <aside className="sidebar" id="admin-sidebar">
+        <nav className="sidebar-nav">
+          <NavLink
+            to="/dashboard"
+            end
+            className={({ isActive }) =>
+              isActive ? 'nav-link active' : 'nav-link'
+            }
+          >
+            <DashboardIcon className="nav-link-icon" />
+            Dashboard
+          </NavLink>
+          <NavLink
+            to="/users"
+            className={({ isActive }) =>
+              isActive ? 'nav-link active' : 'nav-link'
+            }
+          >
+            <UsersIcon className="nav-link-icon" />
+            Users
+          </NavLink>
+          <NavLink
+            to="/requests"
+            className={({ isActive }) =>
+              isActive ? 'nav-link active' : 'nav-link'
+            }
+          >
+            <RequestsIcon className="nav-link-icon" />
+            Pending Requests
+          </NavLink>
+        </nav>
+
+        <div className="sidebar-footer">
+          <button
+            type="button"
+            className="sidebar-logout"
+            onClick={logout}
+            aria-label="Log out"
+          >
+            <span className="sidebar-logout-icon" aria-hidden="true">
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.25"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                <polyline points="16 17 21 12 16 7" />
+                <line x1="21" x2="9" y1="12" y2="12" />
+              </svg>
+            </span>
+            <span className="sidebar-logout-text">Logout</span>
+          </button>
+        </div>
+      </aside>
+
+      <div className="admin-main">
+        <main className="admin-content">
+          <Outlet />
+        </main>
+      </div>
+    </div>
+  );
+}
