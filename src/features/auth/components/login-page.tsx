@@ -8,6 +8,7 @@ import officerUserIcon from '@/assets/simple-user-profile-icon-bright-blue-color
 
 import { PasswordInput } from './password-input';
 import { useAuth } from '../hooks/use-auth';
+import { useCaptcha } from '../hooks/use-captcha';
 import { useLogin } from '../hooks/use-login';
 import { homePathForRole } from '../utils/auth-paths';
 
@@ -17,7 +18,10 @@ export function LoginPage() {
   const navigate = useNavigate();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [captchaAnswer, setCaptchaAnswer] = useState('');
+  const [captchaRefreshKey, setCaptchaRefreshKey] = useState(0);
   const [localError, setLocalError] = useState('');
+  const captchaQuery = useCaptcha(captchaRefreshKey);
 
   if (user) {
     return <Navigate to={homePathForRole(user.role)} replace />;
@@ -27,11 +31,24 @@ export function LoginPage() {
     e.preventDefault();
     setLocalError('');
     try {
-      const loggedIn = await loginMutation.mutateAsync({ username, password });
+      const loggedIn = await loginMutation.mutateAsync({
+        username,
+        password,
+        captchaId: captchaQuery.data?.captchaId ?? '',
+        captchaAnswer,
+      });
       navigate(homePathForRole(loggedIn.role));
     } catch (err) {
       setLocalError(err instanceof Error ? err.message : 'Login failed');
+      setCaptchaAnswer('');
+      setCaptchaRefreshKey((key) => key + 1);
     }
+  }
+
+  function refreshCaptcha() {
+    setCaptchaAnswer('');
+    setLocalError('');
+    setCaptchaRefreshKey((key) => key + 1);
   }
 
   return (
@@ -136,6 +153,65 @@ export function LoginPage() {
                 </div>
               </div>
 
+              <div className="login-captcha-group">
+                <div className="login-captcha-heading">
+                  <label htmlFor="login-captcha" className="login-input-label">
+                    Enter CAPTCHA
+                  </label>
+                  <button
+                    type="button"
+                    className="login-captcha-refresh"
+                    onClick={refreshCaptcha}
+                    disabled={captchaQuery.isFetching}
+                    aria-label="Refresh CAPTCHA"
+                    title="Refresh CAPTCHA"
+                  >
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M20 11a8.1 8.1 0 0 0-15.5-2M4 5v4h4" />
+                      <path d="M4 13a8.1 8.1 0 0 0 15.5 2M20 19v-4h-4" />
+                    </svg>
+                    Refresh
+                  </button>
+                </div>
+                <div className="login-captcha-row">
+                  {captchaQuery.data ? (
+                    <img
+                      src={`data:image/svg+xml;charset=utf-8,${encodeURIComponent(captchaQuery.data.image)}`}
+                      alt="CAPTCHA challenge"
+                      className="login-captcha-image"
+                    />
+                  ) : (
+                    <div className="login-captcha-image login-captcha-loading">
+                      {captchaQuery.isPending ? 'Loading…' : 'Unavailable'}
+                    </div>
+                  )}
+                  <input
+                    id="login-captcha"
+                    type="text"
+                    value={captchaAnswer}
+                    onChange={(e) => setCaptchaAnswer(e.target.value)}
+                    required
+                    minLength={5}
+                    maxLength={5}
+                    autoComplete="off"
+                    placeholder="Enter code"
+                    className="login-text-input login-captcha-input"
+                    aria-describedby="captcha-help"
+                  />
+                </div>
+                <span id="captcha-help" className="login-captcha-help">
+                  Enter the 5 characters shown above.
+                </span>
+              </div>
+
               {localError ? (
                 <p className="error login-error">{localError}</p>
               ) : null}
@@ -143,7 +219,11 @@ export function LoginPage() {
               <button
                 type="submit"
                 className="login-action-btn"
-                disabled={loginMutation.isPending}
+                disabled={
+                  loginMutation.isPending ||
+                  captchaQuery.isFetching ||
+                  !captchaQuery.data
+                }
               >
                 {loginMutation.isPending ? 'Logging in…' : 'Log in'}
               </button>

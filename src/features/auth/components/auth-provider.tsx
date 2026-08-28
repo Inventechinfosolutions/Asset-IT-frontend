@@ -4,9 +4,11 @@ import {
   useState,
   type ReactNode,
 } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 
 import { loginApi } from '../api/login';
 import { AuthContext } from '../hooks/use-auth';
+import { authKeys } from '../keys/auth-keys';
 import type { AuthUser, LoginInput } from '../types/auth';
 
 function readStoredUser(): AuthUser | null {
@@ -23,6 +25,7 @@ function readStoredUser(): AuthUser | null {
 }
 
 export function AuthProvider({ children }: { children: ReactNode }) {
+  const queryClient = useQueryClient();
   const [token, setToken] = useState<string | null>(
     () => localStorage.getItem('accessToken'),
   );
@@ -38,11 +41,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const logout = useCallback(() => {
+    queryClient.removeQueries({ queryKey: authKeys.captchaRoot() });
     localStorage.removeItem('accessToken');
     localStorage.removeItem('user');
     setToken(null);
     setUser(null);
-  }, []);
+  }, [queryClient]);
 
   const value = useMemo(
     () => ({ user, token, login, logout }),
