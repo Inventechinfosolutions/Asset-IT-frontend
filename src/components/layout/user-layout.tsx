@@ -119,9 +119,9 @@ export function UserLayout() {
                 strokeLinecap="round"
                 strokeLinejoin="round"
               >
-                <path d="M14 4a8 8 0 1 1 0 16" />
-                <path d="M10 12H3" />
-                <path d="M6.5 8.5 3 12l3.5 3.5" />
+                <path d="M13 5h6v14h-6" />
+                <path d="M3 12h10" />
+                <polyline points="7 8 3 12 7 16" />
               </svg>
             </span>
             <span className="sidebar-logout-text">Log out</span>

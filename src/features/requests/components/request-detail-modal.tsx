@@ -177,7 +177,7 @@ export function RequestDetailModal({
                 <div className="detail-meta-item">
                   <span className="detail-label">Created</span>
                   <span className="detail-value">
-                    {new Date(request.createdAt).toLocaleString()}
+                    {new Date(request.createdAt).toLocaleDateString()}
                   </span>
                 </div>
               </div>

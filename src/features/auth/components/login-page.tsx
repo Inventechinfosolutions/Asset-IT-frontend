@@ -234,7 +234,7 @@ export function LoginPage() {
         {/* Bottom Feature Pill Cards */}
         <div className="login-features-strip">
           <div className="login-feature-pill">
-            <span className="login-pill-icon green">
+            <span className="login-pill-icon blue">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
                 <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
                 <circle cx="9" cy="7" r="4" />
@@ -246,7 +246,7 @@ export function LoginPage() {
           </div>
 
           <div className="login-feature-pill">
-            <span className="login-pill-icon emerald">
+            <span className="login-pill-icon blue">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
                 <rect width="18" height="18" x="3" y="4" rx="2" ry="2" />
                 <line x1="16" x2="16" y1="2" y2="6" />
@@ -259,7 +259,7 @@ export function LoginPage() {
           </div>
 
           <div className="login-feature-pill">
-            <span className="login-pill-icon teal">
+            <span className="login-pill-icon blue">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
                 <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
                 <path d="m9 12 2 2 4-4" />

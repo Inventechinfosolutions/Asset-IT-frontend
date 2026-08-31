@@ -860,6 +860,13 @@ button.ghost:hover:not(:disabled) {
   background: transparent;
 }
 
+[data-sonner-toast].app-toast {
+  background: #ffffff !important;
+  color: #0f172a !important;
+  border: 1px solid #dbe3ef !important;
+  box-shadow: 0 12px 28px rgba(30, 60, 120, 0.16) !important;
+}
+
 @keyframes toast-in {
   from {
     opacity: 0;
@@ -945,6 +952,49 @@ button.ghost:hover:not(:disabled) {
   z-index: 1;
 }
 
+.login-top-header {
+  background: linear-gradient(145deg, #eef3fa 0%, #e4edf9 58%, #d3e2f5 100%);
+  border-bottom-color: #cbd8e8;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.login-top-header::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-image: radial-gradient(circle, rgba(96, 125, 170, 0.18) 1px, transparent 1.3px);
+  background-size: 11px 11px;
+  background-position: 42% 8%;
+  opacity: 0.58;
+  mask-image: linear-gradient(90deg, transparent 24%, #000 36%, transparent 69%);
+  -webkit-mask-image: linear-gradient(90deg, transparent 24%, #000 36%, transparent 69%);
+}
+
+.login-top-header::after {
+  content: '';
+  position: absolute;
+  z-index: 0;
+  width: 72%;
+  height: 290%;
+  left: 20%;
+  top: -188%;
+  border: 1px solid rgba(75, 125, 190, 0.24);
+  border-radius: 50%;
+  transform: rotate(-15deg);
+  box-shadow:
+    0 0 0 18px rgba(75, 125, 190, 0.05),
+    0 0 0 36px rgba(75, 125, 190, 0.04),
+    0 0 0 54px rgba(75, 125, 190, 0.03);
+  pointer-events: none;
+}
+
+.login-top-brand {
+  position: relative;
+  z-index: 1;
+}
+
 .shell-header-left {
   display: flex;
   align-items: center;
@@ -1022,8 +1072,8 @@ body.nav-lock {
 }
 
 .shell-header-logo {
-  width: 2.75rem;
-  height: 2.75rem;
+  width: 3rem;
+  height: 3rem;
   object-fit: contain;
   border-radius: 50%;
   background: #ffffff;
@@ -1293,6 +1343,7 @@ body.nav-lock {
 .sidebar-logout {
   width: 100%;
   display: inline-flex;
+  flex-direction: row;
   align-items: center;
   justify-content: flex-start;
   gap: 0.55rem;
@@ -1315,6 +1366,7 @@ body.nav-lock {
 
 .sidebar-logout-icon {
   display: inline-flex;
+  order: 0;
   align-items: center;
   justify-content: center;
   width: 18px;
@@ -1333,6 +1385,7 @@ body.nav-lock {
 }
 
 .sidebar-logout-text {
+  order: 1;
   flex: 1;
   text-align: left;
 }
@@ -3578,8 +3631,8 @@ body.nav-lock {
   }
 
   .shell-header-logo {
-    width: 2.2rem;
-    height: 2.2rem;
+    width: 2.4rem;
+    height: 2.4rem;
   }
 
   .shell-header-subtitle {

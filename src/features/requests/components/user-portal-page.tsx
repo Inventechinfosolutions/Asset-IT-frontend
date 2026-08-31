@@ -169,7 +169,6 @@ export function UserPortalPage() {
               <table className="data-table">
                 <thead>
                   <tr>
-                    <th>ID</th>
                     <th>Type</th>
                     <th>Title</th>
                     <th>Address</th>
@@ -182,9 +181,6 @@ export function UserPortalPage() {
                 <tbody>
                   {requests.map((r) => (
                     <tr key={r.id}>
-                      <td>
-                        <span className="cell-mono">{r.id}</span>
-                      </td>
                       <td>
                         <span
                           className={
@@ -215,7 +211,7 @@ export function UserPortalPage() {
                         </span>
                       </td>
                       <td className="cell-muted">
-                        {new Date(r.createdAt).toLocaleString()}
+                        {new Date(r.createdAt).toLocaleDateString()}
                       </td>
                       <td>
                         <div className="table-actions">

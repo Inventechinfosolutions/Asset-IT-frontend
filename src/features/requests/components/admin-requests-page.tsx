@@ -72,7 +72,6 @@ export function AdminRequestsPage() {
               <table className="data-table">
                 <thead>
                   <tr>
-                    <th>ID</th>
                     <th>User</th>
                     <th>Type</th>
                     <th>Title</th>
@@ -86,7 +85,6 @@ export function AdminRequestsPage() {
                 <tbody>
                   {requests.map((r) => (
                     <tr key={r.id}>
-                      <td>{r.id}</td>
                       <td>
                         <span className="cell-name">
                           {r.user?.username || r.user?.name || '—'}
@@ -120,7 +118,7 @@ export function AdminRequestsPage() {
                         </span>
                       </td>
                       <td className="cell-muted">
-                        {new Date(r.createdAt).toLocaleString()}
+                        {new Date(r.createdAt).toLocaleDateString()}
                       </td>
                       <td>
                         <div className="table-actions">
