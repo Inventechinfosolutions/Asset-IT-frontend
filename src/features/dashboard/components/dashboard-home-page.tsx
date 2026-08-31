@@ -45,24 +45,6 @@ function percentChange(current: number, previous: number) {
   return Math.round(((current - previous) / previous) * 100);
 }
 
-function formatTimeAgo(dateString?: string) {
-  if (!dateString) return 'recently';
-  const date = new Date(dateString);
-  if (isNaN(date.getTime())) return 'recently';
-  const now = new Date();
-  const diffMs = now.getTime() - date.getTime();
-  if (diffMs < 0) return 'just now';
-  const diffSec = Math.floor(diffMs / 1000);
-  if (diffSec < 60) return `${Math.max(1, diffSec)}s ago`;
-  const diffMin = Math.floor(diffSec / 60);
-  if (diffMin < 60) return `${diffMin}m ago`;
-  const diffHours = Math.floor(diffMin / 60);
-  if (diffHours < 24) return `${diffHours}h ago`;
-  const diffDays = Math.floor(diffHours / 24);
-  if (diffDays < 30) return `${diffDays}d ago`;
-  return date.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
-}
-
 function Trend({
   value,
   down,
@@ -102,7 +84,6 @@ interface RealActivityItem {
   prefix: string;
   boldText: string;
   suffix: string;
-  timeAgo: string;
   link: string;
   timestamp: number;
 }
@@ -246,7 +227,6 @@ export function DashboardHomePage() {
           prefix: `${typeLabel} `,
           boldText: tag,
           suffix: ` has been ${r.status.toLowerCase()}`,
-          timeAgo: formatTimeAgo(r.createdAt),
           link: '/requests',
           timestamp: ts,
         });
@@ -257,7 +237,6 @@ export function DashboardHomePage() {
           prefix: `${typeLabel} `,
           boldText: tag,
           suffix: ' has been rejected',
-          timeAgo: formatTimeAgo(r.createdAt),
           link: '/requests',
           timestamp: ts,
         });
@@ -268,7 +247,6 @@ export function DashboardHomePage() {
           prefix: `${typeLabel} `,
           boldText: tag,
           suffix: r.status === 'IN_PROGRESS' ? ' is in progress' : ' has been submitted',
-          timeAgo: formatTimeAgo(r.createdAt),
           link: '/requests',
           timestamp: ts,
         });
@@ -285,7 +263,6 @@ export function DashboardHomePage() {
         prefix: 'Employee ',
         boldText: name,
         suffix: u.empNo ? ` (${u.empNo}) registered` : ' has been added',
-        timeAgo: formatTimeAgo(u.createdAt),
         link: '/users',
         timestamp: ts,
       });
@@ -684,7 +661,6 @@ export function DashboardHomePage() {
                     <p>
                       {act.prefix}<strong>{act.boldText}</strong>{act.suffix}
                     </p>
-                    <span>{act.timeAgo}</span>
                   </div>
                 </Link>
               ))}
