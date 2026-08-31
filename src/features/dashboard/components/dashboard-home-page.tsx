@@ -167,8 +167,10 @@ export function DashboardHomePage() {
     ).length;
 
     const months: { label: string; year: number; month: number }[] = [];
-    for (let i = 5; i >= 0; i -= 1) {
-      const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    const chartStartYear =
+      now.getMonth() >= 7 ? now.getFullYear() : now.getFullYear() - 1;
+    for (let i = 0; i < 12; i += 1) {
+      const d = new Date(chartStartYear, 7 + i, 1);
       months.push({
         label: MONTHS[d.getMonth()],
         year: d.getFullYear(),
@@ -198,7 +200,6 @@ export function DashboardHomePage() {
           );
         }).length,
     );
-
     return {
       total,
       completed,
@@ -231,7 +232,7 @@ export function DashboardHomePage() {
       const tag = isAsset ? `#AR-${r.id}` : `#IT-${r.id}`;
       const typeLabel = isAsset ? 'Asset request' : 'IT ticket';
       const d = new Date(r.createdAt);
-      const ts = isNaN(d.getTime()) ? Date.now() : d.getTime();
+      const ts = isNaN(d.getTime()) ? 0 : d.getTime();
 
       if (
         r.status === 'FULFILLED' ||

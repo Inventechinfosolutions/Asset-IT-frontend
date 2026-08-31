@@ -9,9 +9,9 @@ export function LineChart({
   itSeries,
   labels,
 }: LineChartProps) {
-  const width = 720;
-  const height = 280;
-  const pad = { top: 22, right: 24, bottom: 28, left: 34 };
+  const width = 760;
+  const height = 320;
+  const pad = { top: 28, right: 26, bottom: 38, left: 42 };
   const innerW = width - pad.left - pad.right;
   const innerH = height - pad.top - pad.bottom;
   const maxY = Math.max(5, ...assetSeries, ...itSeries);
@@ -56,7 +56,26 @@ export function LineChart({
         viewBox={`0 0 ${width} ${height}`}
         className="dash-chart-svg"
         role="img"
+        aria-label="Monthly asset requests and IT tickets"
       >
+        <defs>
+          <linearGradient id="asset-area-gradient" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#4285f4" stopOpacity="0.2" />
+            <stop offset="100%" stopColor="#4285f4" stopOpacity="0.02" />
+          </linearGradient>
+          <linearGradient id="it-area-gradient" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#ef4035" stopOpacity="0.16" />
+            <stop offset="100%" stopColor="#ef4035" stopOpacity="0.02" />
+          </linearGradient>
+        </defs>
+        <rect
+          x={pad.left}
+          y={pad.top}
+          width={innerW}
+          height={innerH}
+          rx="12"
+          className="dash-chart-plot-bg"
+        />
         {ticks.map((t) => (
           <g key={t}>
             <line
@@ -72,9 +91,19 @@ export function LineChart({
               className="dash-axis-label"
               textAnchor="end"
             >
-              {t}
+              {Math.round(t)}
             </text>
           </g>
+        ))}
+        {labels.map((label, i) => (
+          <line
+            key={`vertical-${label}`}
+            x1={xAt(i)}
+            x2={xAt(i)}
+            y1={pad.top}
+            y2={pad.top + innerH}
+            className="dash-grid-line dash-grid-line-vertical"
+          />
         ))}
         <path d={areaFor(assetSeries)} className="dash-area-asset" />
         <path d={areaFor(itSeries)} className="dash-area-it" />
@@ -83,13 +112,17 @@ export function LineChart({
           className="dash-line-asset"
           fill="none"
         />
-        <path d={pathFor(itSeries)} className="dash-line-it" fill="none" />
+        <path
+          d={pathFor(itSeries)}
+          className="dash-line-it"
+          fill="none"
+        />
         {assetSeries.map((v, i) => (
           <g key={`a-${i}`}>
-            <circle cx={xAt(i)} cy={yAt(v)} r="4" className="dash-dot-asset" />
+            <circle cx={xAt(i)} cy={yAt(v)} r="6" className="dash-dot-asset" />
             <text
               x={xAt(i)}
-              y={yAt(v) - 10}
+              y={yAt(v) - 13}
               className="dash-point-label"
               textAnchor="middle"
             >
@@ -99,10 +132,10 @@ export function LineChart({
         ))}
         {itSeries.map((v, i) => (
           <g key={`i-${i}`}>
-            <circle cx={xAt(i)} cy={yAt(v)} r="4" className="dash-dot-it" />
+            <circle cx={xAt(i)} cy={yAt(v)} r="6" className="dash-dot-it" />
             <text
               x={xAt(i)}
-              y={yAt(v) - 10}
+              y={yAt(v) + 22}
               className="dash-point-label it"
               textAnchor="middle"
             >
