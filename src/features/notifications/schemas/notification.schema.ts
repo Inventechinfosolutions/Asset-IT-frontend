@@ -7,7 +7,8 @@ export const notificationTypeSchema = z.enum([
 
 export const notificationSchema = z.object({
   id: z.number(),
-  userId: z.string(),
+  senderId: z.string().nullable(),
+  receiverId: z.string(),
   type: notificationTypeSchema,
   title: z.string(),
   message: z.string(),

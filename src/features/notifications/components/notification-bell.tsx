@@ -5,11 +5,15 @@ import { useMarkAllNotificationsRead } from '../hooks/use-notification-mutations
 import { useNotifications } from '../hooks/use-notifications';
 import { formatNotificationDate } from '../utils/format-notification-date';
 
-export function NotificationBell() {
+type NotificationBellProps = {
+  receiverId: string;
+};
+
+export function NotificationBell({ receiverId }: NotificationBellProps) {
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
-  const { data, isError } = useNotifications();
-  const markAllRead = useMarkAllNotificationsRead();
+  const { data, isError } = useNotifications(receiverId);
+  const markAllRead = useMarkAllNotificationsRead(receiverId);
   const unreadCount = data?.unreadCount ?? 0;
 
   useEffect(() => {

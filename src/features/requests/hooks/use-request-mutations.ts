@@ -50,7 +50,7 @@ export function useUpdateRequestStatus() {
       queryClient.invalidateQueries({
         queryKey: requestsKeys.adminDetail(updated.id),
       });
-      queryClient.invalidateQueries({ queryKey: notificationsKeys.mine() });
+      queryClient.invalidateQueries({ queryKey: notificationsKeys.all });
       toast.success(
         toastForStatus(updated.status as UpdateableRequestStatus),
       );

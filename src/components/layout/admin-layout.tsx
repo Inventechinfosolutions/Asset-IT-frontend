@@ -70,7 +70,7 @@ export function AdminLayout() {
         </div>
         <div className="shell-header-right">
           <HeaderDateTime />
-          <NotificationBell />
+          <NotificationBell receiverId={user.id} />
 
           <div className="topbar-user shell-header-user">
             <img src={userIcon} alt="" className="topbar-user-icon" />

@@ -2,12 +2,16 @@ interface LineChartProps {
   assetSeries: number[];
   itSeries: number[];
   labels: string[];
+  assetThisMonth: number;
+  itThisMonth: number;
 }
 
 export function LineChart({
   assetSeries,
   itSeries,
   labels,
+  assetThisMonth,
+  itThisMonth,
 }: LineChartProps) {
   const width = 760;
   const height = 320;
@@ -155,6 +159,44 @@ export function LineChart({
           </text>
         ))}
       </svg>
+      <div className="dash-chart-summary">
+        <div className="dash-chart-summary-card asset">
+          <span className="dash-chart-summary-icon" aria-hidden="true">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M6 7h12l1 13H5L6 7Z" />
+              <path d="M9 7a3 3 0 0 1 6 0" />
+            </svg>
+          </span>
+          <strong>Asset Requests</strong>
+          <b>{assetThisMonth}</b>
+          <span>This Month</span>
+        </div>
+        <div className="dash-chart-summary-card it">
+          <span className="dash-chart-summary-icon" aria-hidden="true">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <circle cx="12" cy="12" r="9" />
+              <path d="m9 9 6 6M15 9l-6 6" />
+            </svg>
+          </span>
+          <strong>IT Tickets</strong>
+          <b>{itThisMonth}</b>
+          <span>This Month</span>
+        </div>
+      </div>
     </div>
   );
 }

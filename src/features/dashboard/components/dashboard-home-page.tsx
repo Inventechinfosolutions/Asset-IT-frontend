@@ -181,6 +181,12 @@ export function DashboardHomePage() {
           );
         }).length,
     );
+    const assetThisMonth = requests.filter(
+      (r) => r.requestType === 'ASSET' && inMonth(r, thisMonth),
+    ).length;
+    const itThisMonth = requests.filter(
+      (r) => r.requestType === 'IT_SUPPORT' && inMonth(r, thisMonth),
+    ).length;
     return {
       total,
       completed,
@@ -198,6 +204,8 @@ export function DashboardHomePage() {
       statusTotal: inProgress + rejected + resolved,
       assetSeries,
       itSeries,
+      assetThisMonth,
+      itThisMonth,
       labels: months.map((m) => m.label),
     };
   }, [requestsData?.data, usersData?.data]);
@@ -472,6 +480,8 @@ export function DashboardHomePage() {
               assetSeries={stats.assetSeries}
               itSeries={stats.itSeries}
               labels={stats.labels}
+              assetThisMonth={stats.assetThisMonth}
+              itThisMonth={stats.itThisMonth}
             />
           )}
          

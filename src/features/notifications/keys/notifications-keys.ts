@@ -1,4 +1,5 @@
 export const notificationsKeys = {
   all: ['notifications'] as const,
-  mine: () => [...notificationsKeys.all, 'mine'] as const,
+  mine: (receiverId: string) =>
+    [...notificationsKeys.all, 'mine', receiverId] as const,
 };

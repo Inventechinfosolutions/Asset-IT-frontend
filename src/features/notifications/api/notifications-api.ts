@@ -3,8 +3,13 @@ import { apiClient } from '@/lib/api-client';
 import { notificationsResponseSchema } from '../schemas/notification.schema';
 import type { NotificationsResponse } from '../types/notification';
 
-export async function fetchNotificationsApi(): Promise<NotificationsResponse> {
-  const data = await apiClient<NotificationsResponse>('/notifications');
+export async function fetchNotificationsApi(
+  receiverId: string,
+): Promise<NotificationsResponse> {
+  const params = new URLSearchParams({ receiverId });
+  const data = await apiClient<NotificationsResponse>(
+    `/notifications?${params.toString()}`,
+  );
   return notificationsResponseSchema.parse(data);
 }
 
