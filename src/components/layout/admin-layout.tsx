@@ -4,13 +4,10 @@ import { NavLink, Navigate, Outlet, useLocation } from 'react-router-dom';
 import bdaLogo from '@/assets/bda-logo.jpg';
 import userIcon from '@/assets/user-icon-on-transparent-background-free-png.webp';
 import { useAuth } from '@/features/auth';
+import { NotificationBell } from '@/features/notifications';
 
 import { HeaderDateTime } from './header-date-time';
-import {
-  DashboardIcon,
-  RequestsIcon,
-  UsersIcon,
-} from './sidebar-nav-icons';
+import { DashboardIcon, RequestsIcon, UsersIcon } from './sidebar-nav-icons';
 
 export function AdminLayout() {
   const { user, logout } = useAuth();
@@ -73,12 +70,12 @@ export function AdminLayout() {
         </div>
         <div className="shell-header-right">
           <HeaderDateTime />
+          <NotificationBell />
 
           <div className="topbar-user shell-header-user">
             <img src={userIcon} alt="" className="topbar-user-icon" />
             <div className="topbar-user-meta">
               <p className="topbar-user-name">{user.name || 'Admin'}</p>
-             
             </div>
           </div>
         </div>

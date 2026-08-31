@@ -1,4 +1,5 @@
 import { QueryClientProvider } from '@tanstack/react-query';
+import { Check } from 'lucide-react';
 import React from 'react';
 import { Toaster } from 'sonner';
 
@@ -17,6 +18,16 @@ export function AppProviders({ children }: AppProvidersProps) {
         <Toaster
           position="top-center"
           closeButton
+          icons={{
+            success: (
+              <Check
+                size={18}
+                strokeWidth={3}
+                color="#16a34a"
+                aria-hidden="true"
+              />
+            ),
+          }}
           toastOptions={{
             className: 'app-toast',
             style: {

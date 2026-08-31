@@ -15,13 +15,18 @@
   --accent-soft: rgba(2, 86, 204, 0.14);
   --header-blue: #ffffff;
   --sidebar-blue: #003b8e;
-  --brand-blue: linear-gradient(180deg, var(--accent) 0%, var(--accent-hover) 52%, var(--accent-deep) 100%);
+  --brand-blue: linear-gradient(
+    180deg,
+    var(--accent) 0%,
+    var(--accent-hover) 52%,
+    var(--accent-deep) 100%
+  );
   --danger: #dc2626;
   --ok: #059669;
   --shadow: 0 12px 32px rgba(58, 98, 168, 0.12);
   --radius: 18px;
   --radius-sm: 12px;
-  font-family: 'Source Sans 3', 'Segoe UI', sans-serif;
+  font-family: "Source Sans 3", "Segoe UI", sans-serif;
   line-height: 1.45;
   color: var(--ink);
   background: var(--bg);
@@ -51,7 +56,7 @@ body {
 h1,
 h2,
 .brand {
-  font-family: 'Fraunces', Georgia, serif;
+  font-family: "Fraunces", Georgia, serif;
   font-weight: 600;
   letter-spacing: -0.02em;
 }
@@ -89,7 +94,12 @@ a {
 @media (max-width: 900px) {
   .login-layout-wrapper {
     background-image: none !important;
-    background: linear-gradient(145deg, #eef4fc 0%, #e0ebf8 50%, #d5e3f5 100%) !important;
+    background: linear-gradient(
+      145deg,
+      #eef4fc 0%,
+      #e0ebf8 50%,
+      #d5e3f5 100%
+    ) !important;
   }
 }
 
@@ -132,7 +142,7 @@ a {
 }
 
 .login-top-org {
-  font-family: 'Source Sans 3', 'Segoe UI', system-ui, sans-serif;
+  font-family: "Source Sans 3", "Segoe UI", system-ui, sans-serif;
   font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -143,7 +153,7 @@ a {
 
 .login-top-portal {
   margin: 0.06rem 0;
-  font-family: 'Source Sans 3', 'Segoe UI', system-ui, sans-serif;
+  font-family: "Source Sans 3", "Segoe UI", system-ui, sans-serif;
   font-size: clamp(1.05rem, 1.8vw, 1.28rem);
   font-weight: 800;
   color: #0b1c38;
@@ -152,7 +162,7 @@ a {
 }
 
 .login-top-sub {
-  font-family: 'Source Sans 3', 'Segoe UI', system-ui, sans-serif;
+  font-family: "Source Sans 3", "Segoe UI", system-ui, sans-serif;
   font-size: 0.8rem;
   font-weight: 500;
   color: #64748b;
@@ -243,7 +253,9 @@ a {
   font-weight: 600;
   box-shadow: 0 4px 12px rgba(15, 118, 110, 0.25);
   cursor: pointer;
-  transition: background 0.15s ease, transform 0.15s ease;
+  transition:
+    background 0.15s ease,
+    transform 0.15s ease;
 }
 
 .login-badge-button:hover {
@@ -314,7 +326,7 @@ a {
 
 .login-portal-card-title {
   margin: 0;
-  font-family: 'Source Sans 3', 'Segoe UI', sans-serif;
+  font-family: "Source Sans 3", "Segoe UI", sans-serif;
   font-size: 1.45rem;
   font-weight: 700;
   letter-spacing: -0.02em;
@@ -373,7 +385,9 @@ a {
   font-size: 0.9rem;
   color: #0f172a;
   outline: none;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
 }
 
 .login-input-wrapper .password-field {
@@ -390,7 +404,9 @@ a {
   font-size: 0.9rem;
   color: #0f172a;
   outline: none;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
 }
 
 .login-text-input:focus,
@@ -487,7 +503,10 @@ a {
   border: none;
   box-shadow: 0 6px 16px rgba(0, 102, 204, 0.25);
   cursor: pointer;
-  transition: background 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+  transition:
+    background 0.15s ease,
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
 }
 
 .login-action-btn:hover:not(:disabled) {
@@ -644,7 +663,7 @@ a {
 
 .panel h2 {
   margin: 0.35rem 0 0.25rem;
-  font-family: 'Source Sans 3', 'Segoe UI', sans-serif;
+  font-family: "Source Sans 3", "Segoe UI", sans-serif;
   font-size: 1.55rem;
   font-weight: 700;
   letter-spacing: -0.02em;
@@ -677,11 +696,11 @@ a {
   color: var(--muted);
 }
 
-.form input[type='email'],
-.form input[type='password'],
-.form input[type='text'],
-.form input[type='number'],
-.form input[type='date'],
+.form input[type="email"],
+.form input[type="password"],
+.form input[type="text"],
+.form input[type="number"],
+.form input[type="date"],
 .form select,
 .form textarea,
 .form input:not([type]) {
@@ -890,7 +909,7 @@ button.ghost:hover:not(:disabled) {
   margin: 0;
   padding: 0;
   border-radius: 0;
-  overflow: hidden;
+  overflow: visible;
   box-shadow: none;
   background: #f4f7fb;
 }
@@ -903,33 +922,46 @@ button.ghost:hover:not(:disabled) {
   gap: 1rem;
   padding: 0.75rem 1.5rem;
   padding-top: max(0.75rem, env(safe-area-inset-top));
-  background:
-    linear-gradient(145deg, #eef3fa 0%, #e4edf9 58%, #d3e2f5 100%);
+  background: linear-gradient(145deg, #eef3fa 0%, #e4edf9 58%, #d3e2f5 100%);
   border-bottom: 1px solid #cbd8e8;
   color: #0f172a;
   position: sticky;
   top: 0;
   z-index: 30;
   box-shadow: 0 2px 10px rgba(15, 23, 42, 0.08);
-  overflow: hidden;
+  overflow: visible;
   isolation: isolate;
 }
 
 .shell-header::before {
-  content: '';
+  content: "";
   position: absolute;
   inset: 0;
   z-index: 0;
-  background-image: radial-gradient(circle, rgba(96, 125, 170, 0.18) 1px, transparent 1.3px);
+  background-image: radial-gradient(
+    circle,
+    rgba(96, 125, 170, 0.18) 1px,
+    transparent 1.3px
+  );
   background-size: 11px 11px;
   background-position: 42% 8%;
   opacity: 0.58;
-  mask-image: linear-gradient(90deg, transparent 24%, #000 36%, transparent 69%);
-  -webkit-mask-image: linear-gradient(90deg, transparent 24%, #000 36%, transparent 69%);
+  mask-image: linear-gradient(
+    90deg,
+    transparent 24%,
+    #000 36%,
+    transparent 69%
+  );
+  -webkit-mask-image: linear-gradient(
+    90deg,
+    transparent 24%,
+    #000 36%,
+    transparent 69%
+  );
 }
 
 .shell-header::after {
-  content: '';
+  content: "";
   position: absolute;
   z-index: 0;
   width: 72%;
@@ -960,20 +992,34 @@ button.ghost:hover:not(:disabled) {
 }
 
 .login-top-header::before {
-  content: '';
+  content: "";
   position: absolute;
   inset: 0;
   z-index: 0;
-  background-image: radial-gradient(circle, rgba(96, 125, 170, 0.18) 1px, transparent 1.3px);
+  background-image: radial-gradient(
+    circle,
+    rgba(96, 125, 170, 0.18) 1px,
+    transparent 1.3px
+  );
   background-size: 11px 11px;
   background-position: 42% 8%;
   opacity: 0.58;
-  mask-image: linear-gradient(90deg, transparent 24%, #000 36%, transparent 69%);
-  -webkit-mask-image: linear-gradient(90deg, transparent 24%, #000 36%, transparent 69%);
+  mask-image: linear-gradient(
+    90deg,
+    transparent 24%,
+    #000 36%,
+    transparent 69%
+  );
+  -webkit-mask-image: linear-gradient(
+    90deg,
+    transparent 24%,
+    #000 36%,
+    transparent 69%
+  );
 }
 
 .login-top-header::after {
-  content: '';
+  content: "";
   position: absolute;
   z-index: 0;
   width: 72%;
@@ -1036,7 +1082,9 @@ button.ghost:hover:not(:disabled) {
   height: 2px;
   border-radius: 999px;
   background: currentColor;
-  transition: transform 0.2s ease, opacity 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    opacity 0.2s ease;
 }
 
 .admin-shell.nav-open .nav-toggle-bars span:nth-child(1) {
@@ -1097,7 +1145,7 @@ body.nav-lock {
 }
 
 .shell-header-title {
-  font-family: 'Source Sans 3', 'Segoe UI', sans-serif;
+  font-family: "Source Sans 3", "Segoe UI", sans-serif;
   font-size: clamp(1rem, 1.8vw, 1.22rem);
   font-weight: 700;
   letter-spacing: -0.02em;
@@ -1122,35 +1170,181 @@ body.nav-lock {
   position: relative;
   display: grid;
   place-items: center;
-  width: 2.35rem;
-  height: 2.35rem;
-  border-radius: 50%;
-  background: #f8fafc;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 0.35rem;
+  background: #ffffff;
   border: 1px solid #e2e8f0;
-  color: #475569;
+  color: #123c78;
+  padding: 0;
   cursor: pointer;
-  transition: background 0.15s ease, color 0.15s ease;
+  box-shadow: none;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
 }
 
-.header-notif-btn:hover {
-  background: #f1f5f9;
-  color: #0f172a;
+.header-notif-btn:hover:not(:disabled) {
+  background: #ffffff;
+  color: #123c78;
+  box-shadow: none;
+}
+
+.header-notif-btn.has-unread {
+  color: #123c78;
 }
 
 .header-notif-badge {
   position: absolute;
-  top: -2px;
-  right: -2px;
-  background: #0256cc;
+  top: -0.35rem;
+  right: -0.35rem;
+  background: #dc2626;
   color: #ffffff;
-  font-size: 0.65rem;
+  min-width: 1rem;
+  height: 1rem;
+  padding: 0 0.18rem;
+  font-size: 0.64rem;
   font-weight: 700;
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
+  line-height: 1;
+  border-radius: 999px;
   display: grid;
   place-items: center;
   border: 2px solid #ffffff;
+}
+
+.notification-center {
+  position: relative;
+  z-index: 101;
+  flex-shrink: 0;
+}
+
+.notification-panel {
+  position: absolute;
+  top: calc(100% + 0.7rem);
+  right: 0;
+  z-index: 100;
+  width: min(360px, calc(100vw - 2rem));
+  max-height: min(460px, calc(100vh - 6rem));
+  overflow: hidden;
+  background: #ffffff;
+  border: 1px solid #dbe3ef;
+  border-radius: 14px;
+  box-shadow: 0 16px 36px rgba(15, 35, 75, 0.18);
+}
+
+.notification-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.85rem 0.95rem;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.notification-panel-header h2 {
+  margin: 0;
+  color: #0f172a;
+  font-family: "Source Sans 3", "Segoe UI", sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.notification-mark-all {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.25rem 0.35rem;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: #0256cc;
+  box-shadow: none;
+  font-size: 0.74rem;
+  font-weight: 700;
+}
+
+.notification-mark-all:hover:not(:disabled) {
+  background: #eff6ff;
+  color: #004bb5;
+}
+
+.notification-list {
+  max-height: min(390px, calc(100vh - 10rem));
+  overflow-y: auto;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.notification-item {
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.notification-item:last-child {
+  border-bottom: none;
+}
+
+.notification-item.unread {
+  background: #f8fbff;
+}
+
+.notification-item-content {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  width: 100%;
+  padding: 0.85rem 0.95rem;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  color: #1e293b;
+  text-align: left;
+  box-shadow: none;
+}
+
+.notification-item-dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  margin-top: 0.35rem;
+  border-radius: 50%;
+  background: transparent;
+  flex-shrink: 0;
+}
+
+.notification-item.unread .notification-item-dot {
+  background: #dc2626;
+}
+
+.notification-item-copy {
+  display: grid;
+  min-width: 0;
+  gap: 0.2rem;
+}
+
+.notification-item-copy strong {
+  color: #0f172a;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.notification-item-copy span {
+  color: #475569;
+  font-size: 0.78rem;
+  line-height: 1.35;
+}
+
+.notification-item-copy time {
+  color: #94a3b8;
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+
+.notification-empty {
+  margin: 0;
+  padding: 1.5rem 1rem;
+  color: #64748b;
+  font-size: 0.82rem;
+  text-align: center;
 }
 
 .shell-header-datetime {
@@ -1178,7 +1372,7 @@ body.nav-lock {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  font-family: 'Source Sans 3', 'Segoe UI', sans-serif;
+  font-family: "Source Sans 3", "Segoe UI", sans-serif;
   line-height: 1.2;
 }
 
@@ -1262,7 +1456,7 @@ body.nav-lock {
 
 .sidebar .brand {
   color: #ffffff;
-  font-family: 'Source Sans 3', 'Segoe UI', sans-serif;
+  font-family: "Source Sans 3", "Segoe UI", sans-serif;
   font-size: 1.55rem;
   font-weight: 700;
   letter-spacing: -0.02em;
@@ -1291,7 +1485,7 @@ body.nav-lock {
   border-radius: 12px;
   text-decoration: none;
   color: rgba(255, 255, 255, 0.92);
-  font-family: 'Source Sans 3', 'Segoe UI', sans-serif;
+  font-family: "Source Sans 3", "Segoe UI", sans-serif;
   font-weight: 700;
   font-size: 0.84rem;
   letter-spacing: -0.02em;
@@ -1352,7 +1546,7 @@ body.nav-lock {
   background: rgba(255, 255, 255, 0.08) !important;
   box-shadow: none;
   padding: 0.7rem 0.9rem;
-  font-family: 'Source Sans 3', 'Segoe UI', sans-serif;
+  font-family: "Source Sans 3", "Segoe UI", sans-serif;
   font-size: 0.84rem;
   font-weight: 700;
   line-height: 1.2;
@@ -1361,7 +1555,9 @@ body.nav-lock {
   box-sizing: border-box;
   min-height: 0;
   height: auto;
-  transition: background 0.15s ease, border-color 0.15s ease;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease;
 }
 
 .sidebar-logout-icon {
@@ -1434,7 +1630,7 @@ body.nav-lock {
 }
 
 .topbar-welcome-eyebrow {
-  font-family: 'Source Sans 3', 'Segoe UI', sans-serif;
+  font-family: "Source Sans 3", "Segoe UI", sans-serif;
   font-size: 0.72rem;
   font-weight: 600;
   letter-spacing: 0.08em;
@@ -1444,7 +1640,7 @@ body.nav-lock {
 }
 
 .topbar-welcome-title {
-  font-family: 'Source Sans 3', 'Segoe UI', sans-serif;
+  font-family: "Source Sans 3", "Segoe UI", sans-serif;
   font-size: clamp(0.98rem, 1.6vw, 1.2rem);
   font-weight: 700;
   letter-spacing: -0.02em;
@@ -1535,7 +1731,7 @@ body.nav-lock {
 
 .page-header h1 {
   margin: 0 0 0.2rem;
-  font-family: 'Source Sans 3', 'Segoe UI', sans-serif;
+  font-family: "Source Sans 3", "Segoe UI", sans-serif;
   font-size: 1.55rem;
   font-weight: 700;
   letter-spacing: -0.02em;
@@ -1552,7 +1748,7 @@ body.nav-lock {
 
 .panel-header-row h2 {
   margin: 0;
-  font-family: 'Source Sans 3', 'Segoe UI', sans-serif;
+  font-family: "Source Sans 3", "Segoe UI", sans-serif;
   font-size: 1.45rem;
   font-weight: 700;
   letter-spacing: -0.02em;
@@ -1641,7 +1837,7 @@ body.nav-lock {
 .modal-header-blue h2,
 .modal-detail-title-wrap h2 {
   margin: 0;
-  font-family: 'Source Sans 3', 'Segoe UI', sans-serif;
+  font-family: "Source Sans 3", "Segoe UI", sans-serif;
   font-size: 1.28rem;
   font-weight: 700;
   letter-spacing: -0.015em;
@@ -1769,7 +1965,7 @@ body.nav-lock {
 
 .stat-value {
   margin: 0.35rem 0 0;
-  font-family: 'Fraunces', Georgia, serif;
+  font-family: "Fraunces", Georgia, serif;
   font-size: 1.85rem;
   line-height: 1;
   color: var(--accent);
@@ -1841,7 +2037,7 @@ body.nav-lock {
 
 .dash-welcome-title {
   margin: 0;
-  font-family: 'Source Sans 3', 'Segoe UI', sans-serif;
+  font-family: "Source Sans 3", "Segoe UI", sans-serif;
   font-size: clamp(1.25rem, 2.2vw, 1.55rem);
   font-weight: 700;
   letter-spacing: -0.02em;
@@ -1976,7 +2172,7 @@ body.nav-lock {
   font-weight: 800;
   line-height: 1.1;
   color: #0f172a;
-  font-family: 'Source Sans 3', 'Segoe UI', sans-serif;
+  font-family: "Source Sans 3", "Segoe UI", sans-serif;
 }
 
 .dash-trend {
@@ -2015,7 +2211,10 @@ body.nav-lock {
 /* 3 Main Panels Grid */
 .dash-main-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1.55fr) minmax(0, 1.05fr) minmax(270px, 0.95fr);
+  grid-template-columns: minmax(0, 1.55fr) minmax(0, 1.05fr) minmax(
+      270px,
+      0.95fr
+    );
   gap: 1.15rem;
   align-items: stretch;
 }
@@ -2057,7 +2256,7 @@ body.nav-lock {
 .dash-chart-title-block h2 {
   margin: 0;
   font-size: 1.15rem;
-  font-family: 'Source Sans 3', 'Segoe UI', sans-serif;
+  font-family: "Source Sans 3", "Segoe UI", sans-serif;
   font-weight: 700;
   color: #0f172a;
 }
@@ -2094,7 +2293,7 @@ body.nav-lock {
 .dash-panel-head h2 {
   margin: 0;
   font-size: 0.92rem;
-  font-family: 'Source Sans 3', 'Segoe UI', sans-serif;
+  font-family: "Source Sans 3", "Segoe UI", sans-serif;
   font-weight: 700;
   color: #0f172a;
 }
@@ -2192,7 +2391,9 @@ body.nav-lock {
   background: #f4f8ff;
   text-decoration: none;
   color: #0f172a;
-  transition: border-color 0.15s ease, background 0.15s ease;
+  transition:
+    border-color 0.15s ease,
+    background 0.15s ease;
 }
 
 .dash-action-card:hover {
@@ -2275,7 +2476,8 @@ body.nav-lock {
 }
 
 @keyframes pulse-dot {
-  0%, 100% {
+  0%,
+  100% {
     transform: scale(1);
     opacity: 1;
   }
@@ -2288,7 +2490,7 @@ body.nav-lock {
 .dash-recent-strip-title {
   margin: 0;
   font-size: 0.96rem;
-  font-family: 'Source Sans 3', 'Segoe UI', sans-serif;
+  font-family: "Source Sans 3", "Segoe UI", sans-serif;
   font-weight: 700;
   color: #0f172a;
 }
@@ -2312,8 +2514,20 @@ body.nav-lock {
   width: 100%;
   overflow: hidden;
   padding: 0.25rem 0;
-  mask-image: linear-gradient(to right, transparent, black 3%, black 97%, transparent);
-  -webkit-mask-image: linear-gradient(to right, transparent, black 3%, black 97%, transparent);
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    black 3%,
+    black 97%,
+    transparent
+  );
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent,
+    black 3%,
+    black 97%,
+    transparent
+  );
 }
 
 .dash-recent-ticker-track {
@@ -2612,7 +2826,9 @@ body.nav-lock {
   color: #0f172a;
   font-weight: 600;
   font-size: 0.9rem;
-  transition: background 0.15s ease, border-color 0.15s ease;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease;
 }
 
 .dash-action-item:hover {
@@ -2860,7 +3076,7 @@ body.nav-lock {
 
 .detail-card-header h2 {
   margin: 0;
-  font-family: 'Source Sans 3', 'Segoe UI', sans-serif;
+  font-family: "Source Sans 3", "Segoe UI", sans-serif;
   font-size: 1.45rem;
   font-weight: 700;
   letter-spacing: -0.02em;
@@ -3096,7 +3312,7 @@ body.nav-lock {
 }
 
 .detail-label::after {
-  content: ':';
+  content: ":";
 }
 
 .detail-value {
@@ -3171,7 +3387,7 @@ body.nav-lock {
   margin: 0.75rem 0 1rem;
 }
 
-.table-toolbar input[type='search'] {
+.table-toolbar input[type="search"] {
   width: min(280px, 100%);
   flex: 0 0 auto;
   padding: 0.55rem 0.9rem;
@@ -3186,7 +3402,7 @@ body.nav-lock {
   transition: all 0.15s ease;
 }
 
-.table-toolbar input[type='search']:focus {
+.table-toolbar input[type="search"]:focus {
   border-color: #0256cc;
   box-shadow: 0 0 0 3px rgba(2, 86, 204, 0.15);
 }
@@ -3257,7 +3473,7 @@ body.nav-lock {
 }
 
 .status-action-form select,
-.status-action-form button[type='submit'] {
+.status-action-form button[type="submit"] {
   height: 2.65rem;
   border-radius: 10px;
   box-shadow: none;
@@ -3272,7 +3488,7 @@ body.nav-lock {
   font: inherit;
 }
 
-.status-action-form button[type='submit'] {
+.status-action-form button[type="submit"] {
   min-width: 120px;
   padding: 0 1.5rem;
   border: 1px solid var(--accent);
@@ -3281,7 +3497,7 @@ body.nav-lock {
   font-weight: 600;
 }
 
-.status-action-form button[type='submit']:hover:not(:disabled) {
+.status-action-form button[type="submit"]:hover:not(:disabled) {
   background: var(--accent-hover);
   border-color: var(--accent-hover);
 }
@@ -3543,7 +3759,7 @@ body.nav-lock {
     flex-wrap: wrap;
   }
 
-  .table-toolbar input[type='search'] {
+  .table-toolbar input[type="search"] {
     width: 100%;
   }
 
@@ -3557,7 +3773,7 @@ body.nav-lock {
     width: 100%;
   }
 
-  .status-action-form button[type='submit'] {
+  .status-action-form button[type="submit"] {
     width: 100%;
   }
 
@@ -3576,11 +3792,11 @@ body.nav-lock {
 
 @media (max-width: 768px) {
   /* Prevent iOS Safari auto-zoom on input focus by ensuring 16px font size */
-  input[type='text'],
-  input[type='password'],
-  input[type='search'],
-  input[type='email'],
-  input[type='number'],
+  input[type="text"],
+  input[type="password"],
+  input[type="search"],
+  input[type="email"],
+  input[type="number"],
   select,
   textarea {
     font-size: 16px !important;

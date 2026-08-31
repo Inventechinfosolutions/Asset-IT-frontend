@@ -1,6 +1,8 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
+import { notificationsKeys } from '@/features/notifications';
+
 import {
   createSupportRequestApi,
   updateRequestStatusApi,
@@ -48,6 +50,7 @@ export function useUpdateRequestStatus() {
       queryClient.invalidateQueries({
         queryKey: requestsKeys.adminDetail(updated.id),
       });
+      queryClient.invalidateQueries({ queryKey: notificationsKeys.mine() });
       toast.success(
         toastForStatus(updated.status as UpdateableRequestStatus),
       );
