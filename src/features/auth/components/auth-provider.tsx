@@ -19,7 +19,10 @@ function readStoredUser(): AuthUser | null {
     if (!token || !raw) return null;
     const parsed = JSON.parse(raw) as AuthUser;
     if (!parsed || !parsed.role) return null;
-    return parsed;
+    return {
+      ...parsed,
+      mustChangePassword: Boolean(parsed.mustChangePassword),
+    };
   } catch {
     return null;
   }
@@ -50,9 +53,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(null);
   }, [queryClient]);
 
+  const setMustChangePassword = useCallback((value: boolean) => {
+    setUser((current) => {
+      if (!current) return current;
+      const next = { ...current, mustChangePassword: value };
+      localStorage.setItem('user', JSON.stringify(next));
+      return next;
+    });
+  }, []);
+
   const value = useMemo(
-    () => ({ user, token, login, logout }),
-    [user, token, login, logout],
+    () => ({ user, token, login, logout, setMustChangePassword }),
+    [user, token, login, logout, setMustChangePassword],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

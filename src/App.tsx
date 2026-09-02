@@ -3,6 +3,7 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { AppProviders } from '@/app/providers/app-providers';
 import { AdminLayout, UserLayout } from '@/components/layout';
 import {
+  ChangePasswordPage,
   homePathForRole,
   LoginPage,
   RequireAdmin,
@@ -22,6 +23,9 @@ import { UsersPage } from '@/features/users';
 function RootRedirect() {
   const { user } = useAuth();
   if (!user) return <Navigate to="/login" replace />;
+  if (user.mustChangePassword) {
+    return <Navigate to="/change-password" replace />;
+  }
   return <Navigate to={homePathForRole(user.role)} replace />;
 }
 
@@ -31,6 +35,7 @@ export default function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/change-password" element={<ChangePasswordPage />} />
 
           <Route
             element={

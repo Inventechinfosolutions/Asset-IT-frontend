@@ -7,6 +7,7 @@ export type AuthContextValue = {
   token: string | null;
   login: (credentials: LoginInput) => Promise<AuthUser>;
   logout: () => void;
+  setMustChangePassword: (value: boolean) => void;
 };
 
 export const AuthContext = createContext<AuthContextValue | null>(null);

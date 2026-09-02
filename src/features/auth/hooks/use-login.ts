@@ -10,6 +10,10 @@ export function useLogin() {
   return useMutation({
     mutationFn: (credentials: LoginInput) => login(credentials),
     onSuccess: (user) => {
+      if (user.mustChangePassword) {
+        toast.success('Please reset your temporary password to continue');
+        return;
+      }
       toast.success(`Welcome back, ${user.name || user.aliasName}!`);
     },
     onError: (err: Error) => {

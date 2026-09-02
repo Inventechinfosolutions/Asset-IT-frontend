@@ -24,6 +24,9 @@ export function LoginPage() {
   const captchaQuery = useCaptcha(captchaRefreshKey);
 
   if (user) {
+    if (user.mustChangePassword) {
+      return <Navigate to="/change-password" replace />;
+    }
     return <Navigate to={homePathForRole(user.role)} replace />;
   }
 
@@ -37,6 +40,10 @@ export function LoginPage() {
         captchaId: captchaQuery.data?.captchaId ?? '',
         captchaAnswer,
       });
+      if (loggedIn.mustChangePassword) {
+        navigate('/change-password', { replace: true });
+        return;
+      }
       navigate(homePathForRole(loggedIn.role));
     } catch (err) {
       setLocalError(err instanceof Error ? err.message : 'Login failed');
@@ -67,7 +74,6 @@ export function LoginPage() {
           <div className="login-top-titles">
             <span className="login-top-org">BANGALORE DEVELOPMENT AUTHORITY</span>
             <h1 className="login-top-portal">BDA Asset &amp; IT Request Management Portal</h1>
-            <span className="login-top-sub">Admin Portal</span>
           </div>
         </div>
 

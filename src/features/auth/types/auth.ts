@@ -2,6 +2,8 @@ import { z } from 'zod';
 
 import {
   authUserSchema,
+  changePasswordInputSchema,
+  changePasswordResponseSchema,
   loginInputSchema,
   loginResponseSchema,
   captchaResponseSchema,
@@ -11,3 +13,7 @@ export type AuthUser = z.infer<typeof authUserSchema>;
 export type LoginInput = z.infer<typeof loginInputSchema>;
 export type LoginResponse = z.infer<typeof loginResponseSchema>;
 export type CaptchaResponse = z.infer<typeof captchaResponseSchema>;
+export type ChangePasswordInput = z.infer<typeof changePasswordInputSchema>;
+export type ChangePasswordResponse = z.infer<
+  typeof changePasswordResponseSchema
+>;
