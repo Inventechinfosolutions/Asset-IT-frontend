@@ -10,7 +10,12 @@ import {
   useAuth,
 } from '@/features/auth';
 import { DashboardHomePage } from '@/features/dashboard';
-import { AdminRequestsPage, UserPortalPage } from '@/features/requests';
+import {
+  AdminRequestsPage,
+  RaiseRequestPage,
+  RequestDetailPage,
+  UserPortalPage,
+} from '@/features/requests';
 import { DepartmentsPage } from '@/features/departments';
 import { UsersPage } from '@/features/users';
 
@@ -38,7 +43,10 @@ export default function App() {
             <Route path="/users" element={<UsersPage />} />
             <Route path="/departments" element={<DepartmentsPage />} />
             <Route path="/requests" element={<AdminRequestsPage />} />
-            <Route path="/requests/:id" element={<Navigate to="/requests" replace />} />
+            <Route
+              path="/requests/:id"
+              element={<RequestDetailPage isAdmin />}
+            />
           </Route>
 
           <Route
@@ -49,9 +57,10 @@ export default function App() {
             }
           >
             <Route path="/portal" element={<UserPortalPage />} />
+            <Route path="/portal/raise-request" element={<RaiseRequestPage />} />
             <Route
               path="/portal/requests/:id"
-              element={<Navigate to="/portal" replace />}
+              element={<RequestDetailPage />}
             />
           </Route>
 

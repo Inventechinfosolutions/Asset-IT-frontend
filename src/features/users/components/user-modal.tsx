@@ -12,6 +12,8 @@ interface UserModalProps {
     lastName?: string;
     aliasName: string;
     department: string;
+    employmentType: 'Permanent' | 'Contract';
+    empNo?: string;
     mobile?: string;
     isActive: boolean;
   }) => Promise<void>;
@@ -19,6 +21,7 @@ interface UserModalProps {
 }
 
 const MOBILE_PATTERN = /^[6-9]\d{9}$/;
+const EMP_NO_MAX = 50;
 
 function sanitizeMobile(value: string): string {
   return value.replace(/\D/g, '').slice(0, 10);
@@ -29,6 +32,8 @@ const emptyForm = {
   lastName: '',
   aliasName: '',
   department: '',
+  employmentType: 'Permanent' as 'Permanent' | 'Contract',
+  empNo: '',
   mobile: '',
   isActive: true,
 };
@@ -58,6 +63,11 @@ export function UserModal({
         lastName: editingUser.lastName || '',
         aliasName: editingUser.aliasName,
         department: editingUser.department || '',
+        employmentType:
+          editingUser.employmentType === 'Contract'
+            ? 'Contract'
+            : 'Permanent',
+        empNo: editingUser.empNo || '',
         mobile: editingUser.mobile || '',
         isActive: editingUser.isActive,
       });
@@ -97,6 +107,7 @@ export function UserModal({
 
   if (!isOpen) return null;
 
+  const isPermanent = form.employmentType === 'Permanent';
   const departmentOptions = [...activeDepartments].sort((a, b) =>
     a.localeCompare(b),
   );
@@ -109,6 +120,7 @@ export function UserModal({
     const lastName = form.lastName.trim();
     const aliasName = form.aliasName.trim().replace(/\s+/g, ' ').toLowerCase();
     const department = form.department.trim();
+    const empNo = form.empNo.trim();
     const mobile = sanitizeMobile(form.mobile);
 
     if (!firstName) {
@@ -126,6 +138,21 @@ export function UserModal({
       return;
     }
 
+    if (!form.employmentType) {
+      setFormError('Employee type is required');
+      return;
+    }
+
+    if (isPermanent && !empNo) {
+      setFormError('Employee number is required for permanent staff');
+      return;
+    }
+
+    if (empNo.length > EMP_NO_MAX) {
+      setFormError(`Employee number must be at most ${EMP_NO_MAX} characters`);
+      return;
+    }
+
     if (mobile && !MOBILE_PATTERN.test(mobile)) {
       setFormError('Enter a valid 10-digit mobile number');
       return;
@@ -136,8 +163,10 @@ export function UserModal({
         firstName,
         aliasName,
         department,
+        employmentType: form.employmentType,
         isActive: form.isActive,
         ...(lastName ? { lastName } : {}),
+        ...(isPermanent ? { empNo } : {}),
         mobile: mobile || undefined,
       });
     } catch (err) {
@@ -266,6 +295,58 @@ export function UserModal({
               ))}
             </select>
           </label>
+
+          <div className="form-field-group">
+            <span className="form-field-label">Employee Type</span>
+            <div className="check-row">
+              <label className="check">
+                <input
+                  type="checkbox"
+                  checked={isPermanent}
+                  onChange={() =>
+                    setForm({
+                      ...form,
+                      employmentType: 'Permanent',
+                    })
+                  }
+                />
+                Permanent
+              </label>
+              <label className="check">
+                <input
+                  type="checkbox"
+                  checked={!isPermanent}
+                  onChange={() =>
+                    setForm({
+                      ...form,
+                      employmentType: 'Contract',
+                      empNo: '',
+                    })
+                  }
+                />
+                Contract
+              </label>
+            </div>
+          </div>
+
+          {isPermanent ? (
+            <label>
+              Employee Number
+              <input
+                type="text"
+                value={form.empNo}
+                onChange={(e) =>
+                  setForm({
+                    ...form,
+                    empNo: e.target.value.slice(0, EMP_NO_MAX),
+                  })
+                }
+                required
+                maxLength={EMP_NO_MAX}
+                placeholder="Enter employee number"
+              />
+            </label>
+          ) : null}
 
           {formError ? <p className="error">{formError}</p> : null}
 

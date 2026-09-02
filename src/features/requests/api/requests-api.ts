@@ -21,6 +21,7 @@ function toQueryString(params: ListQueryParams = {}): string {
   if (params.page) q.set('page', String(params.page));
   if (params.limit) q.set('limit', String(params.limit));
   if (params.search?.trim()) q.set('search', params.search.trim());
+  if (params.requestType) q.set('requestType', params.requestType);
   const str = q.toString();
   return str ? `?${str}` : '';
 }
@@ -70,10 +71,11 @@ export async function createSupportRequestApi(
 export async function updateRequestStatusApi(
   id: number,
   status: UpdateableRequestStatus,
+  comment: string,
 ): Promise<SupportRequest> {
   const data = await apiClient<SupportRequest>(`/requests/${id}/status`, {
     method: 'PATCH',
-    body: JSON.stringify({ status }),
+    body: JSON.stringify({ status, comment }),
   });
   return supportRequestSchema.parse(data);
 }

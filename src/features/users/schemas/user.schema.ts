@@ -1,5 +1,7 @@
 import { z } from 'zod';
 
+export const employmentTypeSchema = z.enum(['Permanent', 'Contract']);
+
 export const managedUserSchema = z.object({
   id: z.string(),
   name: z.string().optional().default(''),
@@ -7,6 +9,7 @@ export const managedUserSchema = z.object({
   lastName: z.string().nullable().optional(),
   mobile: z.string().nullable().optional(),
   department: z.string().optional().default(''),
+  employmentType: employmentTypeSchema.optional().default('Permanent'),
   aliasName: z.string(),
   role: z.string(),
   empNo: z.string().nullable().optional(),
@@ -27,6 +30,8 @@ export const createUserSchema = z.object({
   lastName: z.string().max(100).optional(),
   aliasName: z.string().min(3, 'Alias name must be at least 3 characters'),
   department: z.string().min(1, 'Department is required').max(100),
+  employmentType: employmentTypeSchema,
+  empNo: z.string().max(50).optional(),
   mobile: z
     .string()
     .regex(/^[6-9]\d{9}$/, 'Enter a valid 10-digit mobile number')
@@ -39,6 +44,8 @@ export const updateUserSchema = z.object({
   lastName: z.string().max(100).optional(),
   aliasName: z.string().min(3, 'Alias name must be at least 3 characters'),
   department: z.string().min(1, 'Department is required').max(100),
+  employmentType: employmentTypeSchema,
+  empNo: z.string().max(50).optional(),
   mobile: z
     .string()
     .regex(/^[6-9]\d{9}$/, 'Enter a valid 10-digit mobile number')

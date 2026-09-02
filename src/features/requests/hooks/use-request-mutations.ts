@@ -41,10 +41,12 @@ export function useUpdateRequestStatus() {
     mutationFn: ({
       id,
       status,
+      comment,
     }: {
       id: number;
       status: UpdateableRequestStatus;
-    }) => updateRequestStatusApi(id, status),
+      comment: string;
+    }) => updateRequestStatusApi(id, status, comment),
     onSuccess: (updated) => {
       queryClient.invalidateQueries({ queryKey: requestsKeys.lists() });
       queryClient.invalidateQueries({

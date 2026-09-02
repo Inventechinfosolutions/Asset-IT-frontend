@@ -1,5 +1,7 @@
 export { AdminRequestsPage } from './components/admin-requests-page';
 export { UserPortalPage } from './components/user-portal-page';
+export { RaiseRequestPage } from './components/raise-request-page';
+export { RequestDetailPage } from './components/request-detail-page';
 export { RequestDetailModal } from './components/request-detail-modal';
 export { ActionIcon, EyeIcon } from './components/request-action-icons';
 export {

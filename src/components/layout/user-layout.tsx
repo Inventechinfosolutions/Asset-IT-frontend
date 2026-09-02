@@ -93,10 +93,10 @@ export function UserLayout() {
         <nav className="sidebar-nav">
           <NavLink
             to="/portal"
+            end
             className={({ isActive }) =>
               isActive ? 'nav-link active' : 'nav-link'
             }
-            end={false}
           >
             <RequestsIcon className="nav-link-icon" />
             Requests

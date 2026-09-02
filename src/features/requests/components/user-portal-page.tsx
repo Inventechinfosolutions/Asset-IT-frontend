@@ -1,35 +1,14 @@
-import { useEffect, useState, type FormEvent } from 'react';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { PaginationBar } from '@/components/ui/pagination-bar';
-import { useActiveAssets } from '@/features/assets';
 
 import { EyeIcon } from './request-action-icons';
-import { RequestDetailModal } from './request-detail-modal';
-import { useCreateRequest } from '../hooks/use-request-mutations';
 import { useMyRequests } from '../hooks/use-requests';
-import type { RequestType } from '../types/request';
 import { formatRequestStatus, statusBadgeClass } from '../utils/format-status';
 
-const TITLE_MAX = 200;
-const LOCATION_MAX = 500;
-const DESCRIPTION_MAX = 2000;
-
-const emptyForm = {
-  requestType: 'ASSET' as RequestType,
-  selectedAssets: [] as string[],
-  title: '',
-  location: '',
-  description: '',
-};
-
 export function UserPortalPage() {
-  const [form, setForm] = useState(emptyForm);
-  const [showForm, setShowForm] = useState(false);
-  const [formError, setFormError] = useState('');
-  const [selectedRequestId, setSelectedRequestId] = useState<number | null>(
-    null,
-  );
-
+  const navigate = useNavigate();
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(5);
   const [searchInput, setSearchInput] = useState('');
@@ -49,11 +28,6 @@ export function UserPortalPage() {
     search: search || undefined,
   });
 
-  const createRequestMutation = useCreateRequest();
-  const { data: activeAssets = [], isPending: assetsPending } = useActiveAssets(
-    showForm && form.requestType === 'ASSET',
-  );
-
   const requests = data?.data || [];
   const total = data?.total || 0;
   const totalPages = data?.totalPages || 1;
@@ -63,93 +37,15 @@ export function UserPortalPage() {
     setLimit(nextLimit);
   }
 
-  useEffect(() => {
-    if (!showForm) return;
-
-    function onKeyDown(e: KeyboardEvent) {
-      if (e.key === 'Escape') closeForm();
-    }
-
-    document.addEventListener('keydown', onKeyDown);
-    document.body.style.overflow = 'hidden';
-    return () => {
-      document.removeEventListener('keydown', onKeyDown);
-      document.body.style.overflow = '';
-    };
-  }, [showForm]);
-
-  function openForm() {
-    setFormError('');
-    setForm(emptyForm);
-    setShowForm(true);
-  }
-
-  function closeForm() {
-    setShowForm(false);
-    setFormError('');
-    setForm(emptyForm);
-  }
-
-  async function onSubmit(e: FormEvent) {
-    e.preventDefault();
-    setFormError('');
-
-    const title = form.title.trim();
-    const location = form.location.trim();
-    const description = form.description.trim();
-
-    if (!title) {
-      setFormError('Title is required');
-      return;
-    }
-    if (title.length > TITLE_MAX) {
-      setFormError(`Title must be at most ${TITLE_MAX} characters`);
-      return;
-    }
-    if (!location) {
-      setFormError('Address/location is required');
-      return;
-    }
-    if (location.length > LOCATION_MAX) {
-      setFormError(`Address/location must be at most ${LOCATION_MAX} characters`);
-      return;
-    }
-    if (!description) {
-      setFormError('Description is required');
-      return;
-    }
-    if (description.length > DESCRIPTION_MAX) {
-      setFormError(`Description must be at most ${DESCRIPTION_MAX} characters`);
-      return;
-    }
-    if (form.requestType === 'ASSET' && form.selectedAssets.length === 0) {
-      setFormError('Select at least one asset');
-      return;
-    }
-
-    try {
-      await createRequestMutation.mutateAsync({
-        requestType: form.requestType,
-        title,
-        location,
-        description,
-        ...(form.requestType === 'ASSET'
-          ? { selectedAssets: form.selectedAssets }
-          : {}),
-      });
-      setForm(emptyForm);
-      setShowForm(false);
-      setPage(1);
-    } catch (err) {
-      setFormError(err instanceof Error ? err.message : 'Submit failed');
-    }
-  }
-
   return (
     <div className="page">
       <div className="page-header page-header-row">
         <div />
-        <button type="button" className="btn-raise" onClick={openForm}>
+        <button
+          type="button"
+          className="btn-raise"
+          onClick={() => navigate('/portal/raise-request')}
+        >
           Raise Request
         </button>
       </div>
@@ -181,6 +77,7 @@ export function UserPortalPage() {
               <table className="data-table">
                 <thead>
                   <tr>
+                    <th>Request ID</th>
                     <th>Type</th>
                     <th>Title</th>
                     <th>Address</th>
@@ -193,6 +90,11 @@ export function UserPortalPage() {
                 <tbody>
                   {requests.map((r) => (
                     <tr key={r.id}>
+                      <td>
+                        <span className="cell-mono">
+                          {r.requestCode || `REQ-${String(r.id).padStart(2, '0')}`}
+                        </span>
+                      </td>
                       <td>
                         <span
                           className={
@@ -230,7 +132,7 @@ export function UserPortalPage() {
                           <button
                             type="button"
                             className="btn-icon"
-                            onClick={() => setSelectedRequestId(r.id)}
+                            onClick={() => navigate(`/portal/requests/${r.id}`)}
                             aria-label={`View request ${r.id}`}
                             title="View"
                           >
@@ -254,191 +156,6 @@ export function UserPortalPage() {
           </>
         )}
       </section>
-
-      {showForm ? (
-        <div
-          className="modal-backdrop"
-          onClick={closeForm}
-          role="presentation"
-        >
-          <div
-            className="modal modal-raise"
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="raise-request-title"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="modal-header-blue">
-              <h2 id="raise-request-title">Raise Request</h2>
-              <button
-                type="button"
-                className="modal-close-btn"
-                onClick={closeForm}
-                aria-label="Close dialog"
-                title="Close"
-              >
-                <svg
-                  width="18"
-                  height="18"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2.2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <line x1="18" y1="6" x2="6" y2="18" />
-                  <line x1="6" y1="6" x2="18" y2="18" />
-                </svg>
-              </button>
-            </div>
-
-            <form onSubmit={onSubmit} className="form">
-              <fieldset className="type-toggle">
-                <legend>Request type</legend>
-                <div className="check-row">
-                  <label className="check">
-                    <input
-                      type="checkbox"
-                      checked={form.requestType === 'ASSET'}
-                      onChange={() =>
-                        setForm({
-                          ...form,
-                          requestType: 'ASSET',
-                        })
-                      }
-                    />
-                    Asset request
-                  </label>
-                  <label className="check">
-                    <input
-                      type="checkbox"
-                      checked={form.requestType === 'IT_SUPPORT'}
-                      onChange={() =>
-                        setForm({
-                          ...form,
-                          requestType: 'IT_SUPPORT',
-                          selectedAssets: [],
-                        })
-                      }
-                    />
-                    IT support ticket
-                  </label>
-                </div>
-              </fieldset>
-
-              {form.requestType === 'ASSET' ? (
-                <label>
-                  Assets
-                  <select
-                    multiple
-                    className="asset-multi-select"
-                    value={form.selectedAssets}
-                    onChange={(e) => {
-                      const selected = Array.from(
-                        e.target.selectedOptions,
-                        (option) => option.value,
-                      );
-                      setForm({ ...form, selectedAssets: selected });
-                    }}
-                    required
-                    size={Math.min(6, Math.max(3, activeAssets.length || 3))}
-                    disabled={assetsPending || activeAssets.length === 0}
-                  >
-                    {activeAssets.map((asset) => (
-                      <option key={asset} value={asset}>
-                        {asset}
-                      </option>
-                    ))}
-                  </select>
-                  <span className="field-hint-left">
-                    {assetsPending
-                      ? 'Loading assets…'
-                      : activeAssets.length === 0
-                        ? 'No active assets available'
-                        : 'Hold Ctrl (Windows) or Cmd (Mac) to select multiple'}
-                  </span>
-                </label>
-              ) : null}
-
-              <label>
-                Title
-                <input
-                  type="text"
-                  value={form.title}
-                  onChange={(e) =>
-                    setForm({
-                      ...form,
-                      title: e.target.value.slice(0, TITLE_MAX),
-                    })
-                  }
-                  required
-                  maxLength={TITLE_MAX}
-                  placeholder="Short title for your request"
-                  autoFocus
-                />
-              </label>
-
-              <label>
-                Address / Location
-                <input
-                  type="text"
-                  value={form.location}
-                  onChange={(e) =>
-                    setForm({
-                      ...form,
-                      location: e.target.value.slice(0, LOCATION_MAX),
-                    })
-                  }
-                  required
-                  maxLength={LOCATION_MAX}
-                  placeholder="Enter address or location"
-                />
-              </label>
-
-              <label>
-                Description
-                <textarea
-                  value={form.description}
-                  onChange={(e) =>
-                    setForm({
-                      ...form,
-                      description: e.target.value.slice(0, DESCRIPTION_MAX),
-                    })
-                  }
-                  required
-                  maxLength={DESCRIPTION_MAX}
-                  rows={5}
-                  placeholder="Describe your request or issue"
-                />
-              </label>
-
-              {formError ? <p className="error">{formError}</p> : null}
-
-              <div className="modal-actions">
-                <button type="button" className="ghost" onClick={closeForm}>
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  disabled={createRequestMutation.isPending}
-                >
-                  {createRequestMutation.isPending
-                    ? 'Submitting…'
-                    : 'Submit'}
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      ) : null}
-
-      <RequestDetailModal
-        isOpen={selectedRequestId !== null}
-        onClose={() => setSelectedRequestId(null)}
-        requestId={selectedRequestId}
-        isAdmin={false}
-      />
     </div>
   );
 }

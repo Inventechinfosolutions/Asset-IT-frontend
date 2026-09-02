@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { PaginationBar } from '@/components/ui/pagination-bar';
 
@@ -12,12 +12,27 @@ import {
 import { useUsers } from '../hooks/use-users';
 import type { ManagedUser } from '../types/user';
 
+type EmploymentTypeFilter = '' | 'Permanent' | 'Contract';
+
+const EMPLOYMENT_TYPE_FILTERS: {
+  value: EmploymentTypeFilter;
+  label: string;
+}[] = [
+  { value: '', label: 'All' },
+  { value: 'Permanent', label: 'Permanent' },
+  { value: 'Contract', label: 'Contract' },
+];
+
 export function UsersPage() {
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
   const [searchInput, setSearchInput] = useState('');
   const [search, setSearch] = useState('');
   const [showInactive, setShowInactive] = useState(false);
+  const [employmentTypeFilter, setEmploymentTypeFilter] =
+    useState<EmploymentTypeFilter>('');
+  const [filterOpen, setFilterOpen] = useState(false);
+  const filterRef = useRef<HTMLDivElement>(null);
 
   const [editingUser, setEditingUser] = useState<ManagedUser | null>(null);
   const [resetPasswordUser, setResetPasswordUser] = useState<ManagedUser | null>(
@@ -34,11 +49,33 @@ export function UsersPage() {
     return () => window.clearTimeout(timer);
   }, [searchInput]);
 
+  useEffect(() => {
+    if (!filterOpen) return;
+
+    function onPointerDown(e: MouseEvent) {
+      if (!filterRef.current?.contains(e.target as Node)) {
+        setFilterOpen(false);
+      }
+    }
+
+    function onKeyDown(e: KeyboardEvent) {
+      if (e.key === 'Escape') setFilterOpen(false);
+    }
+
+    document.addEventListener('mousedown', onPointerDown);
+    document.addEventListener('keydown', onKeyDown);
+    return () => {
+      document.removeEventListener('mousedown', onPointerDown);
+      document.removeEventListener('keydown', onKeyDown);
+    };
+  }, [filterOpen]);
+
   const { data, isPending, isError, error } = useUsers({
     page,
     limit,
     search: search || undefined,
     isActive: showInactive ? false : true,
+    employmentType: employmentTypeFilter || undefined,
   });
 
   const createUserMutation = useCreateUser();
@@ -49,6 +86,10 @@ export function UsersPage() {
     createUserMutation.isPending ||
     updateUserMutation.isPending ||
     resetPasswordMutation.isPending;
+
+  const selectedFilterLabel =
+    EMPLOYMENT_TYPE_FILTERS.find((item) => item.value === employmentTypeFilter)
+      ?.label || 'All';
 
   function onLimitChange(nextLimit: number) {
     setPage(1);
@@ -75,6 +116,8 @@ export function UsersPage() {
     lastName?: string;
     aliasName: string;
     department: string;
+    employmentType: 'Permanent' | 'Contract';
+    empNo?: string;
     mobile?: string;
     isActive: boolean;
   }) {
@@ -137,6 +180,53 @@ export function UsersPage() {
             onChange={(e) => setSearchInput(e.target.value)}
             placeholder="Search…"
           />
+          <div className="table-filter-dropdown" ref={filterRef}>
+            <button
+              type="button"
+              className="table-filter-trigger"
+              aria-haspopup="listbox"
+              aria-expanded={filterOpen}
+              aria-label="Filter by employee type"
+              onClick={() => setFilterOpen((open) => !open)}
+            >
+              <span>{selectedFilterLabel}</span>
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                aria-hidden="true"
+              >
+                <polyline points="6 9 12 15 18 9" />
+              </svg>
+            </button>
+            {filterOpen ? (
+              <div className="table-filter-menu" role="listbox">
+                {EMPLOYMENT_TYPE_FILTERS.map((item) => (
+                  <button
+                    key={item.label}
+                    type="button"
+                    role="option"
+                    aria-selected={employmentTypeFilter === item.value}
+                    className={
+                      employmentTypeFilter === item.value
+                        ? 'table-filter-option is-selected'
+                        : 'table-filter-option'
+                    }
+                    onClick={() => {
+                      setPage(1);
+                      setEmploymentTypeFilter(item.value);
+                      setFilterOpen(false);
+                    }}
+                  >
+                    {item.label}
+                  </button>
+                ))}
+              </div>
+            ) : null}
+          </div>
         </div>
 
         {isPending ? (
@@ -150,8 +240,9 @@ export function UsersPage() {
                 <thead>
                   <tr>
                     <th>Name</th>
-                    <th>Alias</th>
+                    <th>Emp No</th>
                     <th>Department</th>
+                    <th>Type</th>
                     <th>Mobile</th>
                     <th>Status</th>
                     <th>Action</th>
@@ -168,9 +259,25 @@ export function UsersPage() {
                         </span>
                       </td>
                       <td>
-                        <span className="cell-mono">{u.aliasName}</span>
+                        <span className="cell-mono">{u.empNo || '—'}</span>
                       </td>
                       <td>{u.department || '—'}</td>
+                      <td>
+                        {u.employmentType === 'Permanent' ||
+                        u.employmentType === 'Contract' ? (
+                          <span
+                            className={
+                              u.employmentType === 'Permanent'
+                                ? 'badge badge-permanent'
+                                : 'badge badge-contract'
+                            }
+                          >
+                            {u.employmentType}
+                          </span>
+                        ) : (
+                          '—'
+                        )}
+                      </td>
                       <td>
                         <span className="cell-mono">{u.mobile || '—'}</span>
                       </td>

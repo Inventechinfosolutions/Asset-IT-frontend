@@ -20,6 +20,9 @@ function toQueryString(params: UsersListQueryParams = {}): string {
   if (params.isActive !== undefined) {
     q.set('isActive', String(params.isActive));
   }
+  if (params.employmentType) {
+    q.set('employmentType', params.employmentType);
+  }
   const str = q.toString();
   return str ? `?${str}` : '';
 }

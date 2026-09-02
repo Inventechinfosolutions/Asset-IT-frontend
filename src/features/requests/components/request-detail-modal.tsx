@@ -4,6 +4,7 @@ import { useUpdateRequestStatus } from '../hooks/use-request-mutations';
 import { useMyRequestDetail, useRequestDetail } from '../hooks/use-requests';
 import type { UpdateableRequestStatus } from '../types/request';
 import { formatRequestStatus, statusBadgeClass } from '../utils/format-status';
+import { AssetLinesTable } from './asset-line-picker';
 
 interface RequestDetailModalProps {
   isOpen: boolean;
@@ -21,6 +22,7 @@ export function RequestDetailModal({
   const [selectedStatus, setSelectedStatus] = useState<
     UpdateableRequestStatus | ''
   >('');
+  const [comment, setComment] = useState('');
   const [formError, setFormError] = useState('');
 
   // Close on Escape key
@@ -38,6 +40,7 @@ export function RequestDetailModal({
   // Reset local state when modal closes or requestId changes
   useEffect(() => {
     setSelectedStatus('');
+    setComment('');
     setFormError('');
   }, [requestId, isOpen]);
 
@@ -63,13 +66,17 @@ export function RequestDetailModal({
       return;
     }
 
+    const trimmedComment = comment.trim();
+
     setFormError('');
     try {
       await updateStatusMutation.mutateAsync({
         id: request.id,
         status: selectedStatus,
+        comment: trimmedComment,
       });
       setSelectedStatus('');
+      setComment('');
       onClose();
     } catch (err) {
       setFormError(
@@ -89,9 +96,7 @@ export function RequestDetailModal({
       >
         <div className="modal-detail-header">
           <div className="modal-detail-title-wrap">
-            <h2 id="request-modal-title">
-              Request Details 
-            </h2>
+            <h2 id="request-modal-title">Request Details</h2>
             <p className="modal-detail-subtitle">
               {isAdmin
                 ? 'Review request details and take action.'
@@ -192,6 +197,13 @@ export function RequestDetailModal({
                   </div>
 
                   <div className="detail-field-group">
+                    <span className="detail-label">Zone</span>
+                    <div className="detail-field-value">
+                      {request.zone || '—'}
+                    </div>
+                  </div>
+
+                  <div className="detail-field-group">
                     <span className="detail-label">Address / Location</span>
                     <div className="detail-field-value detail-location-value">
                       {request.location || '—'}
@@ -209,11 +221,11 @@ export function RequestDetailModal({
                 {request.requestType === 'ASSET' ? (
                   <div className="detail-field-group">
                     <span className="detail-label">Assets</span>
-                    <div className="detail-field-value">
-                      {request.selectedAssets?.length
-                        ? request.selectedAssets.join(', ')
-                        : '—'}
-                    </div>
+                    {request.selectedAssets?.length ? (
+                      <AssetLinesTable rows={request.selectedAssets} />
+                    ) : (
+                      <div className="detail-field-value">—</div>
+                    )}
                   </div>
                 ) : null}
               </div>
@@ -246,6 +258,18 @@ export function RequestDetailModal({
                         )}
                       </select>
                     </label>
+                    <label>
+                      Comment
+                      <textarea
+                        value={comment}
+                        onChange={(e) =>
+                          setComment(e.target.value.slice(0, 2000))
+                        }
+                        maxLength={2000}
+                        rows={3}
+                        placeholder="Add a comment for this status update"
+                      />
+                    </label>
                     {formError ? <p className="error">{formError}</p> : null}
                     <button
                       type="submit"
@@ -259,11 +283,20 @@ export function RequestDetailModal({
                 </div>
               ) : (
                 <div className="detail-notice-footer">
+                  {request.adminComment ? (
+                    <div className="detail-field-group" style={{ marginBottom: '0.75rem' }}>
+                      <span className="detail-label">Comment</span>
+                      <div className="detail-field-value">
+                        {request.adminComment}
+                      </div>
+                    </div>
+                  ) : null}
                   <span className="detail-notice-text">
                     This request status is currently{' '}
                     <strong>
                       {formatRequestStatus(request.status).toLowerCase()}
-                    </strong>.
+                    </strong>
+                    .
                   </span>
                 </div>
               )}

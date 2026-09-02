@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { PaginationBar } from '@/components/ui/pagination-bar';
 
 import { ActionIcon, EyeIcon } from './request-action-icons';
-import { RequestDetailModal } from './request-detail-modal';
 import { useAllRequests } from '../hooks/use-requests';
 import {
   canTakeRequestAction,
@@ -11,14 +11,24 @@ import {
   statusBadgeClass,
 } from '../utils/format-status';
 
+type RequestTypeFilter = '' | 'ASSET' | 'IT_SUPPORT';
+
+const REQUEST_TYPE_FILTERS: { value: RequestTypeFilter; label: string }[] = [
+  { value: '', label: 'All' },
+  { value: 'ASSET', label: 'Asset' },
+  { value: 'IT_SUPPORT', label: 'IT Support' },
+];
+
 export function AdminRequestsPage() {
+  const navigate = useNavigate();
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(5);
   const [searchInput, setSearchInput] = useState('');
   const [search, setSearch] = useState('');
-  const [selectedRequestId, setSelectedRequestId] = useState<number | null>(
-    null,
-  );
+  const [requestTypeFilter, setRequestTypeFilter] =
+    useState<RequestTypeFilter>('');
+  const [filterOpen, setFilterOpen] = useState(false);
+  const filterRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const timer = window.setTimeout(() => {
@@ -28,15 +38,40 @@ export function AdminRequestsPage() {
     return () => window.clearTimeout(timer);
   }, [searchInput]);
 
+  useEffect(() => {
+    if (!filterOpen) return;
+
+    function onPointerDown(e: MouseEvent) {
+      if (!filterRef.current?.contains(e.target as Node)) {
+        setFilterOpen(false);
+      }
+    }
+
+    function onKeyDown(e: KeyboardEvent) {
+      if (e.key === 'Escape') setFilterOpen(false);
+    }
+
+    document.addEventListener('mousedown', onPointerDown);
+    document.addEventListener('keydown', onKeyDown);
+    return () => {
+      document.removeEventListener('mousedown', onPointerDown);
+      document.removeEventListener('keydown', onKeyDown);
+    };
+  }, [filterOpen]);
+
   const { data, isPending, isError, error } = useAllRequests({
     page,
     limit,
     search: search || undefined,
+    requestType: requestTypeFilter || undefined,
   });
 
   const requests = data?.data || [];
   const total = data?.total || 0;
   const totalPages = data?.totalPages || 1;
+  const selectedFilterLabel =
+    REQUEST_TYPE_FILTERS.find((item) => item.value === requestTypeFilter)
+      ?.label || 'All';
 
   function onLimitChange(nextLimit: number) {
     setPage(1);
@@ -60,6 +95,53 @@ export function AdminRequestsPage() {
             onChange={(e) => setSearchInput(e.target.value)}
             placeholder="Search…"
           />
+          <div className="table-filter-dropdown" ref={filterRef}>
+            <button
+              type="button"
+              className="table-filter-trigger"
+              aria-haspopup="listbox"
+              aria-expanded={filterOpen}
+              aria-label="Filter by request type"
+              onClick={() => setFilterOpen((open) => !open)}
+            >
+              <span>{selectedFilterLabel}</span>
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                aria-hidden="true"
+              >
+                <polyline points="6 9 12 15 18 9" />
+              </svg>
+            </button>
+            {filterOpen ? (
+              <div className="table-filter-menu" role="listbox">
+                {REQUEST_TYPE_FILTERS.map((item) => (
+                  <button
+                    key={item.label}
+                    type="button"
+                    role="option"
+                    aria-selected={requestTypeFilter === item.value}
+                    className={
+                      requestTypeFilter === item.value
+                        ? 'table-filter-option is-selected'
+                        : 'table-filter-option'
+                    }
+                    onClick={() => {
+                      setPage(1);
+                      setRequestTypeFilter(item.value);
+                      setFilterOpen(false);
+                    }}
+                  >
+                    {item.label}
+                  </button>
+                ))}
+              </div>
+            ) : null}
+          </div>
         </div>
 
         {isPending ? (
@@ -72,13 +154,15 @@ export function AdminRequestsPage() {
               <table className="data-table">
                 <thead>
                   <tr>
+                    <th>Request ID</th>
                     <th>User</th>
-                    <th>Type</th>
+                    <th>Emp No</th>
+                    <th>Department</th>
+                    <th>Request Type</th>
                     <th>Title</th>
-                    <th>Address</th>
-                    <th>Description</th>
+                    <th>Zone</th>
                     <th>Status</th>
-                    <th>Created</th>
+                    <th>Date</th>
                     <th>Action</th>
                   </tr>
                 </thead>
@@ -86,10 +170,21 @@ export function AdminRequestsPage() {
                   {requests.map((r) => (
                     <tr key={r.id}>
                       <td>
+                        <span className="cell-mono">
+                          {r.requestCode || `REQ-${String(r.id).padStart(2, '0')}`}
+                        </span>
+                      </td>
+                      <td>
                         <span className="cell-name">
                           {r.user?.aliasName || r.user?.name || '—'}
                         </span>
                       </td>
+                      <td>
+                        <span className="cell-mono">
+                          {r.user?.empNo || '—'}
+                        </span>
+                      </td>
+                      <td>{r.user?.department || '—'}</td>
                       <td>
                         <span
                           className={
@@ -102,30 +197,21 @@ export function AdminRequestsPage() {
                         </span>
                       </td>
                       <td className="cell-preview">{r.title || '—'}</td>
-                      <td>
-                        <div className="cell-description-scroll">
-                          {r.location || '—'}
-                        </div>
-                      </td>
-                      <td>
-                        <div className="cell-description-scroll">
-                          {r.description || '—'}
-                        </div>
-                      </td>
+                      <td>{r.zone || '—'}</td>
                       <td>
                         <span className={statusBadgeClass(r.status)}>
                           {formatRequestStatus(r.status)}
                         </span>
                       </td>
                       <td className="cell-muted">
-                        {new Date(r.createdAt).toLocaleDateString()}
+                        {new Date(r.createdAt).toLocaleString()}
                       </td>
                       <td>
                         <div className="table-actions">
                           <button
                             type="button"
                             className="btn-icon"
-                            onClick={() => setSelectedRequestId(r.id)}
+                            onClick={() => navigate(`/requests/${r.id}`)}
                             aria-label={`View request ${r.id}`}
                             title="View"
                           >
@@ -135,7 +221,7 @@ export function AdminRequestsPage() {
                             <button
                               type="button"
                               className="btn-icon btn-icon-action"
-                              onClick={() => setSelectedRequestId(r.id)}
+                              onClick={() => navigate(`/requests/${r.id}`)}
                               aria-label={`Update request ${r.id}`}
                               title="Take action"
                             >
@@ -160,13 +246,6 @@ export function AdminRequestsPage() {
           </>
         )}
       </section>
-
-      <RequestDetailModal
-        isOpen={selectedRequestId !== null}
-        onClose={() => setSelectedRequestId(null)}
-        requestId={selectedRequestId}
-        isAdmin
-      />
     </div>
   );
 }

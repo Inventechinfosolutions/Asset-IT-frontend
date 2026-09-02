@@ -10,4 +10,5 @@ export type ListQueryParams = {
   page?: number;
   limit?: number;
   search?: string;
+  requestType?: 'ASSET' | 'IT_SUPPORT';
 };
