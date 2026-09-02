@@ -940,6 +940,42 @@ a {
   grid-area: zone;
 }
 
+.raise-zone-dropdown {
+  width: 100%;
+}
+
+.raise-zone-trigger {
+  width: 100%;
+  min-width: 0;
+  padding: 0.75rem 0.85rem;
+  border: 1px solid rgba(26, 47, 85, 0.28);
+  border-radius: 12px;
+  background: #ffffff;
+  color: var(--ink);
+  font: inherit;
+  font-size: 1rem;
+  box-shadow: none;
+}
+
+.raise-zone-trigger:hover,
+.raise-zone-trigger:focus,
+.raise-zone-trigger:hover:not(:disabled) {
+  border-color: rgba(26, 47, 85, 0.28);
+  background: #ffffff;
+  color: var(--ink);
+  box-shadow: none;
+}
+
+.raise-zone-trigger:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.raise-zone-placeholder {
+  color: #94a3b8;
+  font-weight: 400;
+}
+
 .raise-field-location {
   grid-area: location;
 }
@@ -1193,6 +1229,73 @@ a {
 
 .form select {
   cursor: pointer;
+}
+
+.form-department-dropdown {
+  width: 100%;
+}
+
+.form-department-trigger {
+  width: 100%;
+  min-width: 0;
+  padding: 0.7rem 0.8rem;
+  border: 1px solid rgba(26, 47, 85, 0.32);
+  border-radius: var(--radius-sm);
+  background: #ffffff;
+  color: var(--ink);
+  font: inherit;
+  font-size: inherit;
+  font-weight: 400;
+  box-shadow: none;
+}
+
+.form-department-trigger:hover,
+.form-department-trigger:focus,
+.form-department-trigger:hover:not(:disabled) {
+  border-color: rgba(26, 47, 85, 0.32);
+  background: #ffffff;
+  color: var(--ink);
+  box-shadow: none;
+}
+
+.form-department-placeholder {
+  color: #94a3b8;
+  font-weight: 400;
+}
+
+.form-department-menu {
+  max-height: 220px;
+  overflow-y: auto;
+  background: #ffffff;
+}
+
+.form-department-menu .table-filter-option,
+button.table-filter-option.form-department-option {
+  width: 100%;
+  display: block;
+  border-radius: 8px;
+  background: #ffffff;
+  background-color: #ffffff;
+  color: #0f172a;
+  box-shadow: none;
+  font-weight: 500;
+}
+
+.form-department-menu .table-filter-option:hover,
+.form-department-menu .table-filter-option:focus,
+.form-department-menu .table-filter-option:hover:not(:disabled),
+.form-department-menu .table-filter-option.is-selected,
+.form-department-menu .table-filter-option.is-selected:hover:not(:disabled) {
+  background: #f1f5f9;
+  background-color: #f1f5f9;
+  color: #0f172a;
+  box-shadow: none;
+}
+
+.form-department-empty {
+  padding: 0.65rem 0.7rem;
+  color: #64748b;
+  font-size: 0.88rem;
 }
 
 .portal-form-panel {
@@ -4100,6 +4203,7 @@ body.nav-lock {
   border: none;
   border-radius: 8px;
   background: #ffffff;
+  background-color: #ffffff;
   color: #0f172a;
   font: inherit;
   font-size: 0.88rem;
@@ -4108,19 +4212,24 @@ body.nav-lock {
   cursor: pointer;
 }
 
-.table-filter-option:hover,
-.table-filter-option:focus,
-.table-filter-option:hover:not(:disabled),
-.table-filter-option.is-selected,
-.table-filter-option.is-selected:hover,
-.table-filter-option.is-selected:focus,
-.table-filter-option.is-selected:hover:not(:disabled) {
-  background: #f1f5f9;
+button.table-filter-option,
+button.table-filter-option:hover:not(:disabled),
+button.table-filter-option:focus {
+  background: #ffffff;
+  background-color: #ffffff;
   color: #0f172a;
   box-shadow: none;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
-.table-filter-option.is-selected {
+button.table-filter-option:hover:not(:disabled),
+button.table-filter-option.is-selected,
+button.table-filter-option.is-selected:hover:not(:disabled) {
+  background: #f1f5f9;
+  background-color: #f1f5f9;
+  color: #0f172a;
+  box-shadow: none;
   font-weight: 600;
 }
 

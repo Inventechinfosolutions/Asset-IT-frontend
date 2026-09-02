@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from 'react';
+import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 import { useActiveAssets } from '@/features/assets';
@@ -29,6 +29,8 @@ export function RaiseRequestPage() {
   const navigate = useNavigate();
   const [form, setForm] = useState(emptyForm);
   const [formError, setFormError] = useState('');
+  const [zoneOpen, setZoneOpen] = useState(false);
+  const zoneRef = useRef<HTMLDivElement>(null);
 
   const createRequestMutation = useCreateRequest();
   const { data: activeAssets = [], isPending: assetsPending } = useActiveAssets(
@@ -37,6 +39,33 @@ export function RaiseRequestPage() {
   const { data: zones = [], isPending: zonesPending } = useZones();
 
   const isAsset = form.requestType === 'ASSET';
+  const zoneDisabled = zonesPending || zones.length === 0;
+  const zoneLabel = form.zone
+    ? form.zone
+    : zonesPending
+      ? 'Loading zones…'
+      : 'Select zone';
+
+  useEffect(() => {
+    if (!zoneOpen) return;
+
+    function onPointerDown(e: MouseEvent) {
+      if (!zoneRef.current?.contains(e.target as Node)) {
+        setZoneOpen(false);
+      }
+    }
+
+    function onKeyDown(e: KeyboardEvent) {
+      if (e.key === 'Escape') setZoneOpen(false);
+    }
+
+    document.addEventListener('mousedown', onPointerDown);
+    document.addEventListener('keydown', onKeyDown);
+    return () => {
+      document.removeEventListener('mousedown', onPointerDown);
+      document.removeEventListener('keydown', onKeyDown);
+    };
+  }, [zoneOpen]);
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
@@ -216,26 +245,60 @@ export function RaiseRequestPage() {
               </div>
             ) : null}
 
-            <label className="raise-field raise-field-zone">
+            <div className="raise-field raise-field-zone">
               <span className="raise-field-label">
                 Zone<span className="req" aria-hidden="true">*</span>
               </span>
-              <select
-                value={form.zone}
-                onChange={(e) => setForm({ ...form, zone: e.target.value })}
-                required
-                disabled={zonesPending || zones.length === 0}
-              >
-                <option value="">
-                  {zonesPending ? 'Loading zones…' : 'Select zone'}
-                </option>
-                {zones.map((zone) => (
-                  <option key={zone} value={zone}>
-                    {zone}
-                  </option>
-                ))}
-              </select>
-            </label>
+              <div className="table-filter-dropdown raise-zone-dropdown" ref={zoneRef}>
+                <button
+                  type="button"
+                  className="table-filter-trigger raise-zone-trigger"
+                  aria-haspopup="listbox"
+                  aria-expanded={zoneOpen}
+                  aria-label="Select zone"
+                  disabled={zoneDisabled}
+                  onClick={() => setZoneOpen((open) => !open)}
+                >
+                  <span className={form.zone ? undefined : 'raise-zone-placeholder'}>
+                    {zoneLabel}
+                  </span>
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    aria-hidden="true"
+                  >
+                    <polyline points="6 9 12 15 18 9" />
+                  </svg>
+                </button>
+                {zoneOpen && !zoneDisabled ? (
+                  <div className="table-filter-menu" role="listbox">
+                    {zones.map((zone) => (
+                      <button
+                        key={zone}
+                        type="button"
+                        role="option"
+                        aria-selected={form.zone === zone}
+                        className={
+                          form.zone === zone
+                            ? 'table-filter-option is-selected'
+                            : 'table-filter-option'
+                        }
+                        onClick={() => {
+                          setForm({ ...form, zone });
+                          setZoneOpen(false);
+                        }}
+                      >
+                        {zone}
+                      </button>
+                    ))}
+                  </div>
+                ) : null}
+              </div>
+            </div>
 
             <label className="raise-field raise-field-location">
               <span className="raise-field-label">Address / Location</span>

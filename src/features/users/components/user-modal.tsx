@@ -1,4 +1,4 @@
-import { useEffect, useState, type FormEvent } from 'react';
+import { useEffect, useRef, useState, type FormEvent } from 'react';
 
 import type { ManagedUser } from '../types/user';
 import { useActiveDepartments } from '@/features/departments';
@@ -47,6 +47,8 @@ export function UserModal({
 }: UserModalProps) {
   const [form, setForm] = useState(emptyForm);
   const [formError, setFormError] = useState('');
+  const [departmentOpen, setDepartmentOpen] = useState(false);
+  const departmentRef = useRef<HTMLDivElement>(null);
   const [prevEditingUser, setPrevEditingUser] = useState<ManagedUser | null>(
     null,
   );
@@ -57,6 +59,7 @@ export function UserModal({
     setPrevIsOpen(isOpen);
     setPrevEditingUser(editingUser);
     setFormError('');
+    setDepartmentOpen(false);
     if (editingUser) {
       setForm({
         firstName: editingUser.firstName || editingUser.name || '',
@@ -80,7 +83,13 @@ export function UserModal({
     if (!isOpen) return;
 
     function onKeyDown(e: KeyboardEvent) {
-      if (e.key === 'Escape') onClose();
+      if (e.key === 'Escape') {
+        if (departmentOpen) {
+          setDepartmentOpen(false);
+          return;
+        }
+        onClose();
+      }
     }
 
     document.addEventListener('keydown', onKeyDown);
@@ -89,7 +98,20 @@ export function UserModal({
       document.removeEventListener('keydown', onKeyDown);
       document.body.style.overflow = '';
     };
-  }, [isOpen, onClose]);
+  }, [isOpen, onClose, departmentOpen]);
+
+  useEffect(() => {
+    if (!departmentOpen) return;
+
+    function onPointerDown(e: MouseEvent) {
+      if (!departmentRef.current?.contains(e.target as Node)) {
+        setDepartmentOpen(false);
+      }
+    }
+
+    document.addEventListener('mousedown', onPointerDown);
+    return () => document.removeEventListener('mousedown', onPointerDown);
+  }, [departmentOpen]);
 
   useEffect(() => {
     if (!isOpen || activeDepartments.length === 0) return;
@@ -111,6 +133,7 @@ export function UserModal({
   const departmentOptions = [...activeDepartments].sort((a, b) =>
     a.localeCompare(b),
   );
+  const departmentLabel = form.department || 'Select department';
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -278,23 +301,73 @@ export function UserModal({
             />
           </label>
 
-          <label>
-            Department
-            <select
-              value={form.department}
-              onChange={(e) =>
-                setForm({ ...form, department: e.target.value })
-              }
-              required
+          <div className="form-field-group">
+            <span className="form-field-label">Department</span>
+            <div
+              className="table-filter-dropdown form-department-dropdown"
+              ref={departmentRef}
             >
-              <option value="">Select department</option>
-              {departmentOptions.map((department) => (
-                <option key={department} value={department}>
-                  {department}
-                </option>
-              ))}
-            </select>
-          </label>
+              <button
+                type="button"
+                className="table-filter-trigger form-department-trigger"
+                aria-haspopup="listbox"
+                aria-expanded={departmentOpen}
+                aria-label="Select department"
+                onClick={() => setDepartmentOpen((open) => !open)}
+              >
+                <span
+                  className={
+                    form.department ? undefined : 'form-department-placeholder'
+                  }
+                >
+                  {departmentLabel}
+                </span>
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  aria-hidden="true"
+                >
+                  <polyline points="6 9 12 15 18 9" />
+                </svg>
+              </button>
+              {departmentOpen ? (
+                <div
+                  className="table-filter-menu form-department-menu"
+                  role="listbox"
+                >
+                  {departmentOptions.length === 0 ? (
+                    <div className="form-department-empty">
+                      No active departments
+                    </div>
+                  ) : (
+                    departmentOptions.map((department) => (
+                      <button
+                        key={department}
+                        type="button"
+                        role="option"
+                        aria-selected={form.department === department}
+                        className={
+                          form.department === department
+                            ? 'table-filter-option is-selected'
+                            : 'table-filter-option'
+                        }
+                        onClick={() => {
+                          setForm({ ...form, department });
+                          setDepartmentOpen(false);
+                        }}
+                      >
+                        {department}
+                      </button>
+                    ))
+                  )}
+                </div>
+              ) : null}
+            </div>
+          </div>
 
           <div className="form-field-group">
             <span className="form-field-label">Employee Type</span>
