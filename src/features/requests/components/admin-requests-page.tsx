@@ -87,7 +87,7 @@ export function AdminRequestsPage() {
                     <tr key={r.id}>
                       <td>
                         <span className="cell-name">
-                          {r.user?.username || r.user?.name || '—'}
+                          {r.user?.aliasName || r.user?.name || '—'}
                         </span>
                       </td>
                       <td>

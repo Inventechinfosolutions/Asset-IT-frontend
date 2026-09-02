@@ -3,9 +3,12 @@ import { z } from 'zod';
 export const managedUserSchema = z.object({
   id: z.string(),
   name: z.string().optional().default(''),
-  username: z.string(),
+  firstName: z.string().optional().default(''),
+  lastName: z.string().nullable().optional(),
+  mobile: z.string().nullable().optional(),
+  department: z.string().optional().default(''),
+  aliasName: z.string(),
   role: z.string(),
-  employmentType: z.enum(['PERMANENT', 'CONTRACT']).nullable().optional(),
   empNo: z.string().nullable().optional(),
   isActive: z.boolean(),
   createdAt: z.string().optional(),
@@ -20,17 +23,25 @@ export const paginatedUsersSchema = z.object({
 });
 
 export const createUserSchema = z.object({
-  username: z.string().min(3, 'Username must be at least 3 characters'),
-  password: z.string().min(6, 'Password must be at least 6 characters'),
-  isPermanent: z.boolean(),
-  empNo: z.string().optional(),
+  firstName: z.string().min(1, 'First name is required').max(100),
+  lastName: z.string().max(100).optional(),
+  aliasName: z.string().min(3, 'Alias name must be at least 3 characters'),
+  department: z.string().min(1, 'Department is required').max(100),
+  mobile: z
+    .string()
+    .regex(/^[6-9]\d{9}$/, 'Enter a valid 10-digit mobile number')
+    .optional(),
   isActive: z.boolean(),
 });
 
 export const updateUserSchema = z.object({
-  username: z.string().min(3, 'Username must be at least 3 characters'),
-  password: z.string().min(6).optional().or(z.literal('')),
-  isPermanent: z.boolean(),
-  empNo: z.string().optional(),
+  firstName: z.string().min(1, 'First name is required').max(100),
+  lastName: z.string().max(100).optional(),
+  aliasName: z.string().min(3, 'Alias name must be at least 3 characters'),
+  department: z.string().min(1, 'Department is required').max(100),
+  mobile: z
+    .string()
+    .regex(/^[6-9]\d{9}$/, 'Enter a valid 10-digit mobile number')
+    .optional(),
   isActive: z.boolean(),
 });

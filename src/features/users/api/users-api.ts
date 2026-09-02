@@ -1,5 +1,5 @@
 import { apiClient } from '@/lib/api-client';
-import type { ListQueryParams } from '@/types/pagination';
+import type { UsersListQueryParams } from '../types/users-list-params';
 
 import {
   managedUserSchema,
@@ -12,17 +12,20 @@ import type {
   UpdateUserInput,
 } from '../types/user';
 
-function toQueryString(params: ListQueryParams = {}): string {
+function toQueryString(params: UsersListQueryParams = {}): string {
   const q = new URLSearchParams();
   if (params.page) q.set('page', String(params.page));
   if (params.limit) q.set('limit', String(params.limit));
   if (params.search?.trim()) q.set('search', params.search.trim());
+  if (params.isActive !== undefined) {
+    q.set('isActive', String(params.isActive));
+  }
   const str = q.toString();
   return str ? `?${str}` : '';
 }
 
 export async function getUsersApi(
-  params: ListQueryParams = {},
+  params: UsersListQueryParams = {},
 ): Promise<PaginatedUsers> {
   const data = await apiClient<PaginatedUsers>(`/users${toQueryString(params)}`);
   return paginatedUsersSchema.parse(data);
@@ -45,6 +48,13 @@ export async function updateUserApi(
   const data = await apiClient<ManagedUser>(`/users/${id}`, {
     method: 'PATCH',
     body: JSON.stringify(input),
+  });
+  return managedUserSchema.parse(data);
+}
+
+export async function resetUserPasswordApi(id: string): Promise<ManagedUser> {
+  const data = await apiClient<ManagedUser>(`/users/${id}/reset-password`, {
+    method: 'PATCH',
   });
   return managedUserSchema.parse(data);
 }

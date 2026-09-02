@@ -27,6 +27,7 @@ export const supportRequestSchema = z.object({
   title: z.string().optional().default(''),
   location: z.string().optional().default(''),
   description: z.string().optional().default(''),
+  selectedAssets: z.array(z.string()).nullable().optional(),
   createdAt: z.string(),
 });
 
@@ -35,7 +36,7 @@ export const adminSupportRequestSchema = supportRequestSchema.extend({
     .object({
       id: z.string(),
       name: z.string().optional().default(''),
-      username: z.string(),
+      aliasName: z.string(),
     })
     .nullable()
     .optional(),
@@ -61,7 +62,8 @@ export const createSupportRequestSchema = z.object({
   requestType: requestTypeSchema,
   title: z.string().min(1, 'Title is required').max(200),
   location: z.string().min(1, 'Address/location is required').max(500),
-  description: z.string().min(1, 'Description is required').max(200),
+  description: z.string().min(1, 'Description is required').max(2000),
+  selectedAssets: z.array(z.string()).optional(),
 });
 
 export const createSupportRequestInputSchema = createSupportRequestSchema;

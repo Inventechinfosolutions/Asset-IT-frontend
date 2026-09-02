@@ -1,28 +1,35 @@
 import { useEffect, useState, type FormEvent } from 'react';
 
-import { PasswordInput } from '@/features/auth';
-
 import type { ManagedUser } from '../types/user';
+import { useActiveDepartments } from '@/features/departments';
 
 interface UserModalProps {
   isOpen: boolean;
   editingUser: ManagedUser | null;
   onClose: () => void;
   onSubmit: (formData: {
-    username: string;
-    password?: string;
-    isPermanent: boolean;
-    empNo?: string;
+    firstName: string;
+    lastName?: string;
+    aliasName: string;
+    department: string;
+    mobile?: string;
     isActive: boolean;
   }) => Promise<void>;
   isLoading: boolean;
 }
 
+const MOBILE_PATTERN = /^[6-9]\d{9}$/;
+
+function sanitizeMobile(value: string): string {
+  return value.replace(/\D/g, '').slice(0, 10);
+}
+
 const emptyForm = {
-  username: '',
-  password: '',
-  isPermanent: true,
-  empNo: '',
+  firstName: '',
+  lastName: '',
+  aliasName: '',
+  department: '',
+  mobile: '',
   isActive: true,
 };
 
@@ -39,6 +46,7 @@ export function UserModal({
     null,
   );
   const [prevIsOpen, setPrevIsOpen] = useState(false);
+  const { data: activeDepartments = [] } = useActiveDepartments();
 
   if (isOpen !== prevIsOpen || editingUser !== prevEditingUser) {
     setPrevIsOpen(isOpen);
@@ -46,10 +54,11 @@ export function UserModal({
     setFormError('');
     if (editingUser) {
       setForm({
-        username: editingUser.username,
-        password: '',
-        isPermanent: editingUser.employmentType !== 'CONTRACT',
-        empNo: editingUser.empNo || '',
+        firstName: editingUser.firstName || editingUser.name || '',
+        lastName: editingUser.lastName || '',
+        aliasName: editingUser.aliasName,
+        department: editingUser.department || '',
+        mobile: editingUser.mobile || '',
         isActive: editingUser.isActive,
       });
     } else {
@@ -72,29 +81,64 @@ export function UserModal({
     };
   }, [isOpen, onClose]);
 
+  useEffect(() => {
+    if (!isOpen || activeDepartments.length === 0) return;
+
+    setForm((current) => {
+      if (
+        !current.department ||
+        activeDepartments.includes(current.department)
+      ) {
+        return current;
+      }
+      return { ...current, department: '' };
+    });
+  }, [isOpen, activeDepartments]);
+
   if (!isOpen) return null;
+
+  const departmentOptions = [...activeDepartments].sort((a, b) =>
+    a.localeCompare(b),
+  );
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     setFormError('');
 
-    if (form.isPermanent && !form.empNo.trim()) {
-      setFormError('Employee number is required for permanent staff');
+    const firstName = form.firstName.trim();
+    const lastName = form.lastName.trim();
+    const aliasName = form.aliasName.trim().replace(/\s+/g, ' ').toLowerCase();
+    const department = form.department.trim();
+    const mobile = sanitizeMobile(form.mobile);
+
+    if (!firstName) {
+      setFormError('First name is required');
       return;
     }
 
-    if (!editingUser && !form.password.trim()) {
-      setFormError('Password is required');
+    if (!aliasName) {
+      setFormError('Alias name is required');
+      return;
+    }
+
+    if (!department) {
+      setFormError('Department is required');
+      return;
+    }
+
+    if (mobile && !MOBILE_PATTERN.test(mobile)) {
+      setFormError('Enter a valid 10-digit mobile number');
       return;
     }
 
     try {
       await onSubmit({
-        username: form.username.trim().replace(/\s+/g, ' ').toLowerCase(),
-        isPermanent: form.isPermanent,
+        firstName,
+        aliasName,
+        department,
         isActive: form.isActive,
-        ...(form.isPermanent ? { empNo: form.empNo.trim() } : {}),
-        ...(form.password.trim() ? { password: form.password.trim() } : {}),
+        ...(lastName ? { lastName } : {}),
+        mobile: mobile || undefined,
       });
     } catch (err) {
       setFormError(err instanceof Error ? err.message : 'Operation failed');
@@ -112,7 +156,7 @@ export function UserModal({
       >
         <div className="modal-header-blue">
           <h2 id="user-form-title">
-            {editingUser ? 'Edit Employee' : 'Create Employee'}
+            {editingUser ? 'Edit User' : 'Create User'}
           </h2>
           <button
             type="button"
@@ -138,73 +182,89 @@ export function UserModal({
         </div>
 
         <form onSubmit={handleSubmit} className="form">
-          <label>
-            Username
+          <div className="form-first-name-group">
+            <div className="form-first-name-header">
+              <span className="form-field-label">First Name</span>
+              <label className="check form-active-check">
+                <input
+                  type="checkbox"
+                  checked={form.isActive}
+                  onChange={(e) =>
+                    setForm({ ...form, isActive: e.target.checked })
+                  }
+                />
+                Active
+              </label>
+            </div>
             <input
               type="text"
-              value={form.username}
-              onChange={(e) => setForm({ ...form, username: e.target.value })}
+              value={form.firstName}
+              onChange={(e) =>
+                setForm({ ...form, firstName: e.target.value })
+              }
+              required
+              maxLength={100}
+              autoFocus
+            />
+          </div>
+
+          <label>
+            Last Name
+            <input
+              type="text"
+              value={form.lastName}
+              onChange={(e) => setForm({ ...form, lastName: e.target.value })}
+              maxLength={100}
+            />
+          </label>
+
+          <label>
+            Alias Name
+            <input
+              type="text"
+              value={form.aliasName}
+              onChange={(e) => setForm({ ...form, aliasName: e.target.value })}
               required
               minLength={3}
               maxLength={100}
               pattern="[a-zA-Z0-9._\- ]+"
               title="Letters, numbers, spaces, dots, underscores, and hyphens only"
-              autoFocus
             />
           </label>
 
           <label>
-            Password
-            <PasswordInput
-              value={form.password}
-              onChange={(e) => setForm({ ...form, password: e.target.value })}
-              required={!editingUser}
-              minLength={6}
+            Mobile Number
+            <input
+              type="tel"
+              inputMode="numeric"
+              autoComplete="tel"
+              value={form.mobile}
+              onChange={(e) =>
+                setForm({ ...form, mobile: sanitizeMobile(e.target.value) })
+              }
+              maxLength={10}
+              pattern="[6-9][0-9]{9}"
+              placeholder="10-digit number (optional)"
+              title="Enter a valid 10-digit mobile number starting with 6–9"
             />
           </label>
 
-          <fieldset className="type-toggle">
-            <legend>Employee type</legend>
-            <div className="check-row">
-              <label className="check">
-                <input
-                  type="checkbox"
-                  checked={form.isPermanent === true}
-                  onChange={() => setForm({ ...form, isPermanent: true })}
-                />
-                Permanent
-              </label>
-              <label className="check">
-                <input
-                  type="checkbox"
-                  checked={form.isPermanent === false}
-                  onChange={() =>
-                    setForm({ ...form, isPermanent: false, empNo: '' })
-                  }
-                />
-                Contract
-              </label>
-            </div>
-          </fieldset>
-
-          {form.isPermanent ? (
-            <label>
-              Employee number
-              <input
-                value={form.empNo}
-                onChange={(e) => setForm({ ...form, empNo: e.target.value })}
-                required
-              />
-            </label>
-          ) : null}
-
-          <label className="check">
-            <input
-              type="checkbox"
-              checked={form.isActive}
-              onChange={(e) => setForm({ ...form, isActive: e.target.checked })}
-            />
-            Active
+          <label>
+            Department
+            <select
+              value={form.department}
+              onChange={(e) =>
+                setForm({ ...form, department: e.target.value })
+              }
+              required
+            >
+              <option value="">Select department</option>
+              {departmentOptions.map((department) => (
+                <option key={department} value={department}>
+                  {department}
+                </option>
+              ))}
+            </select>
           </label>
 
           {formError ? <p className="error">{formError}</p> : null}

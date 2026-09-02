@@ -7,7 +7,7 @@ import { useAuth } from '@/features/auth';
 import { NotificationBell } from '@/features/notifications';
 
 import { HeaderDateTime } from './header-date-time';
-import { DashboardIcon, RequestsIcon, UsersIcon } from './sidebar-nav-icons';
+import { DashboardIcon, DepartmentsIcon, RequestsIcon, UsersIcon } from './sidebar-nav-icons';
 
 export function AdminLayout() {
   const { user, logout } = useAuth();
@@ -109,6 +109,15 @@ export function AdminLayout() {
           >
             <UsersIcon className="nav-link-icon" />
             Users
+          </NavLink>
+          <NavLink
+            to="/departments"
+            className={({ isActive }) =>
+              isActive ? 'nav-link active' : 'nav-link'
+            }
+          >
+            <DepartmentsIcon className="nav-link-icon" />
+            Departments
           </NavLink>
           <NavLink
             to="/requests"

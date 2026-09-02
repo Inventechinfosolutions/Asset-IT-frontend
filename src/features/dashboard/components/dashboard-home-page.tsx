@@ -264,7 +264,7 @@ export function DashboardHomePage() {
     for (const u of users) {
       const d = u.createdAt ? new Date(u.createdAt) : null;
       const ts = d && !isNaN(d.getTime()) ? d.getTime() : 0;
-      const name = u.name?.trim() || u.username;
+      const name = u.name?.trim() || u.aliasName;
       items.push({
         id: `user-${u.id}`,
         iconType: 'blue',
@@ -289,7 +289,7 @@ export function DashboardHomePage() {
     return [...activities, ...activities];
   }, [activities]);
 
-  const displayName = user?.name?.trim() || user?.username?.trim() || 'Admin';
+  const displayName = user?.name?.trim() || user?.aliasName?.trim() || 'Admin';
 
   const dayOfWeek = new Date().toLocaleDateString(undefined, { weekday: 'long' });
   const fullDate = new Date().toLocaleDateString(undefined, {
@@ -528,7 +528,7 @@ export function DashboardHomePage() {
                 </svg>
               </span>
               <div className="dash-action-card-text">
-                <strong>Create Employee</strong>
+                <strong>Create User</strong>
                 <span>Add new employee to the system</span>
               </div>
               <span className="dash-action-card-chevron" aria-hidden="true">

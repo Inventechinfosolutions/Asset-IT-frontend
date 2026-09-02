@@ -11,6 +11,7 @@ import {
 } from '@/features/auth';
 import { DashboardHomePage } from '@/features/dashboard';
 import { AdminRequestsPage, UserPortalPage } from '@/features/requests';
+import { DepartmentsPage } from '@/features/departments';
 import { UsersPage } from '@/features/users';
 
 function RootRedirect() {
@@ -35,6 +36,7 @@ export default function App() {
           >
             <Route path="/dashboard" element={<DashboardHomePage />} />
             <Route path="/users" element={<UsersPage />} />
+            <Route path="/departments" element={<DepartmentsPage />} />
             <Route path="/requests" element={<AdminRequestsPage />} />
             <Route path="/requests/:id" element={<Navigate to="/requests" replace />} />
           </Route>

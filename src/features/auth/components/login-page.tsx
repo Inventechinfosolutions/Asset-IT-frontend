@@ -16,7 +16,7 @@ export function LoginPage() {
   const { user } = useAuth();
   const loginMutation = useLogin();
   const navigate = useNavigate();
-  const [username, setUsername] = useState('');
+  const [aliasName, setAliasName] = useState('');
   const [password, setPassword] = useState('');
   const [captchaAnswer, setCaptchaAnswer] = useState('');
   const [captchaRefreshKey, setCaptchaRefreshKey] = useState(0);
@@ -32,7 +32,7 @@ export function LoginPage() {
     setLocalError('');
     try {
       const loggedIn = await loginMutation.mutateAsync({
-        username,
+        aliasName,
         password,
         captchaId: captchaQuery.data?.captchaId ?? '',
         captchaAnswer,
@@ -95,8 +95,8 @@ export function LoginPage() {
 
             <form onSubmit={onSubmit} className="login-portal-form">
               <div className="login-field-group">
-                <label htmlFor="login-username" className="login-input-label">
-                  Enter Username
+                <label htmlFor="login-alias-name" className="login-input-label">
+                  Enter User Name
                 </label>
                 <div className="login-input-wrapper">
                   <svg
@@ -111,14 +111,14 @@ export function LoginPage() {
                     <circle cx="12" cy="7" r="4" />
                   </svg>
                   <input
-                    id="login-username"
+                    id="login-alias-name"
                     type="text"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
+                    value={aliasName}
+                    onChange={(e) => setAliasName(e.target.value)}
                     required
                     autoComplete="username"
                     minLength={3}
-                    placeholder="Enter Username"
+                    placeholder="Enter User Name"
                     
                     className="login-text-input"
                   />

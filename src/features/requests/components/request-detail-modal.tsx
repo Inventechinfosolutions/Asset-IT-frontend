@@ -145,7 +145,7 @@ export function RequestDetailModal({
                   <div className="detail-meta-item">
                     <span className="detail-label">User</span>
                     <span className="detail-value">
-                      {request.user?.username || request.user?.name || '—'}
+                      {request.user?.aliasName || request.user?.name || '—'}
                     </span>
                   </div>
                 ) : null}
@@ -205,6 +205,17 @@ export function RequestDetailModal({
                     {request.description || '—'}
                   </div>
                 </div>
+
+                {request.requestType === 'ASSET' ? (
+                  <div className="detail-field-group">
+                    <span className="detail-label">Assets</span>
+                    <div className="detail-field-value">
+                      {request.selectedAssets?.length
+                        ? request.selectedAssets.join(', ')
+                        : '—'}
+                    </div>
+                  </div>
+                ) : null}
               </div>
 
               {isAdmin && request.status === 'SUBMITTED' ? (

@@ -3,7 +3,12 @@ import { useEffect, useState } from 'react';
 import { PaginationBar } from '@/components/ui/pagination-bar';
 
 import { UserModal } from './user-modal';
-import { useCreateUser, useUpdateUser } from '../hooks/use-user-mutations';
+import { ResetPasswordDialog } from './reset-password-dialog';
+import {
+  useCreateUser,
+  useResetUserPassword,
+  useUpdateUser,
+} from '../hooks/use-user-mutations';
 import { useUsers } from '../hooks/use-users';
 import type { ManagedUser } from '../types/user';
 
@@ -12,8 +17,12 @@ export function UsersPage() {
   const [limit, setLimit] = useState(10);
   const [searchInput, setSearchInput] = useState('');
   const [search, setSearch] = useState('');
+  const [showInactive, setShowInactive] = useState(false);
 
   const [editingUser, setEditingUser] = useState<ManagedUser | null>(null);
+  const [resetPasswordUser, setResetPasswordUser] = useState<ManagedUser | null>(
+    null,
+  );
   const [showModal, setShowModal] = useState(false);
 
   // Debounce search
@@ -29,13 +38,17 @@ export function UsersPage() {
     page,
     limit,
     search: search || undefined,
+    isActive: showInactive ? false : true,
   });
 
   const createUserMutation = useCreateUser();
   const updateUserMutation = useUpdateUser();
+  const resetPasswordMutation = useResetUserPassword();
 
   const isMutating =
-    createUserMutation.isPending || updateUserMutation.isPending;
+    createUserMutation.isPending ||
+    updateUserMutation.isPending ||
+    resetPasswordMutation.isPending;
 
   function onLimitChange(nextLimit: number) {
     setPage(1);
@@ -58,10 +71,11 @@ export function UsersPage() {
   }
 
   async function handleFormSubmit(formData: {
-    username: string;
-    password?: string;
-    isPermanent: boolean;
-    empNo?: string;
+    firstName: string;
+    lastName?: string;
+    aliasName: string;
+    department: string;
+    mobile?: string;
     isActive: boolean;
   }) {
     if (editingUser) {
@@ -70,18 +84,15 @@ export function UsersPage() {
         input: formData,
       });
     } else {
-      if (!formData.password) {
-        throw new Error('Password is required');
-      }
-      await createUserMutation.mutateAsync({
-        username: formData.username,
-        password: formData.password,
-        isPermanent: formData.isPermanent,
-        empNo: formData.empNo,
-        isActive: formData.isActive,
-      });
+      await createUserMutation.mutateAsync(formData);
     }
     closeModal();
+  }
+
+  async function handleResetPassword() {
+    if (!resetPasswordUser) return;
+    await resetPasswordMutation.mutateAsync(resetPasswordUser.id);
+    setResetPasswordUser(null);
   }
 
   const users = data?.data || [];
@@ -92,9 +103,23 @@ export function UsersPage() {
     <div className="page">
       <div className="page-header page-header-row">
         <div />
-        <button type="button" onClick={openCreateForm}>
-          Create Employee
-        </button>
+        <div className="page-header-actions">
+          <label className="page-filter-toggle">
+            <input
+              type="checkbox"
+              checked={showInactive}
+              onChange={(e) => {
+                setPage(1);
+                setShowInactive(e.target.checked);
+              }}
+            />
+            <span className="page-filter-toggle-box" aria-hidden="true" />
+            Inactive
+          </label>
+          <button type="button" onClick={openCreateForm}>
+            Create User
+          </button>
+        </div>
       </div>
 
       {isError ? (
@@ -124,11 +149,11 @@ export function UsersPage() {
               <table className="data-table">
                 <thead>
                   <tr>
-                    <th>Username</th>
-                    <th>Employee type</th>
-                    <th>Emp no</th>
+                    <th>Name</th>
+                    <th>Alias</th>
+                    <th>Department</th>
+                    <th>Mobile</th>
                     <th>Status</th>
-                    <th>Role</th>
                     <th>Action</th>
                   </tr>
                 </thead>
@@ -136,21 +161,18 @@ export function UsersPage() {
                   {users.map((u) => (
                     <tr key={u.id}>
                       <td>
-                        <span className="cell-name">{u.username}</span>
+                        <span className="cell-name">
+                          {[u.firstName || u.name, u.lastName]
+                            .filter(Boolean)
+                            .join(' ')}
+                        </span>
                       </td>
                       <td>
-                        {u.employmentType === 'PERMANENT' ? (
-                          <span className="badge badge-permanent">
-                            Permanent
-                          </span>
-                        ) : u.employmentType === 'CONTRACT' ? (
-                          <span className="badge badge-contract">Contract</span>
-                        ) : (
-                          <span className="cell-muted">—</span>
-                        )}
+                        <span className="cell-mono">{u.aliasName}</span>
                       </td>
+                      <td>{u.department || '—'}</td>
                       <td>
-                        <span className="cell-mono">{u.empNo || '—'}</span>
+                        <span className="cell-mono">{u.mobile || '—'}</span>
                       </td>
                       <td>
                         <span
@@ -164,31 +186,52 @@ export function UsersPage() {
                         </span>
                       </td>
                       <td>
-                        <span className="badge badge-role">{u.role}</span>
-                      </td>
-                      <td>
-                        <button
-                          type="button"
-                          className="btn-icon"
-                          onClick={() => openEditForm(u)}
-                          aria-label={`Edit ${u.username}`}
-                          title="Edit"
-                        >
-                          <svg
-                            width="16"
-                            height="16"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            aria-hidden="true"
+                        <div className="table-actions">
+                          <button
+                            type="button"
+                            className="btn-icon"
+                            onClick={() => openEditForm(u)}
+                            aria-label={`Edit ${u.aliasName}`}
+                            title="Edit"
                           >
-                            <path d="M12 20h9" />
-                            <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z" />
-                          </svg>
-                        </button>
+                            <svg
+                              width="16"
+                              height="16"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="2"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              aria-hidden="true"
+                            >
+                              <path d="M12 20h9" />
+                              <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z" />
+                            </svg>
+                          </button>
+                          <button
+                            type="button"
+                            className="btn-icon btn-icon-action"
+                            onClick={() => setResetPasswordUser(u)}
+                            aria-label={`Reset password for ${u.aliasName}`}
+                            title="Reset password"
+                          >
+                            <svg
+                              width="16"
+                              height="16"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="2"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              aria-hidden="true"
+                            >
+                              <path d="M3 7v6h6" />
+                              <path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6.36 2.64L3 13" />
+                            </svg>
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   ))}
@@ -213,6 +256,14 @@ export function UsersPage() {
         onClose={closeModal}
         onSubmit={handleFormSubmit}
         isLoading={isMutating}
+      />
+
+      <ResetPasswordDialog
+        user={resetPasswordUser}
+        isOpen={Boolean(resetPasswordUser)}
+        isLoading={resetPasswordMutation.isPending}
+        onClose={() => setResetPasswordUser(null)}
+        onConfirm={handleResetPassword}
       />
     </div>
   );

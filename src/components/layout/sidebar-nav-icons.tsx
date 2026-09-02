@@ -69,7 +69,7 @@ export function RequestsIcon({ className }: IconProps) {
   );
 }
 
-export function AssetsIcon({ className }: IconProps) {
+export function DepartmentsIcon({ className }: IconProps) {
   return (
     <svg
       className={className}
@@ -83,29 +83,13 @@ export function AssetsIcon({ className }: IconProps) {
       strokeLinejoin="round"
       aria-hidden="true"
     >
-      <rect width="20" height="14" x="2" y="5" rx="2" />
-      <line x1="2" x2="22" y1="10" y2="10" />
-    </svg>
-  );
-}
-
-export function ITTicketsIcon({ className }: IconProps) {
-  return (
-    <svg
-      className={className}
-      width="20"
-      height="20"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <rect width="20" height="14" x="2" y="3" rx="2" />
-      <line x1="8" x2="16" y1="21" y2="21" />
-      <line x1="12" x2="12" y1="17" y2="21" />
+      <path d="M3 21h18" />
+      <path d="M6 21V7" />
+      <path d="M10 21V7" />
+      <path d="M14 21V7" />
+      <path d="M18 21V7" />
+      <path d="M4 7h16" />
+      <path d="M6 3h12" />
     </svg>
   );
 }

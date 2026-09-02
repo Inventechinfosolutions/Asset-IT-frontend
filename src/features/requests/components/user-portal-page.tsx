@@ -1,6 +1,7 @@
 import { useEffect, useState, type FormEvent } from 'react';
 
 import { PaginationBar } from '@/components/ui/pagination-bar';
+import { useActiveAssets } from '@/features/assets';
 
 import { EyeIcon } from './request-action-icons';
 import { RequestDetailModal } from './request-detail-modal';
@@ -15,6 +16,7 @@ const DESCRIPTION_MAX = 2000;
 
 const emptyForm = {
   requestType: 'ASSET' as RequestType,
+  selectedAssets: [] as string[],
   title: '',
   location: '',
   description: '',
@@ -48,6 +50,9 @@ export function UserPortalPage() {
   });
 
   const createRequestMutation = useCreateRequest();
+  const { data: activeAssets = [], isPending: assetsPending } = useActiveAssets(
+    showForm && form.requestType === 'ASSET',
+  );
 
   const requests = data?.data || [];
   const total = data?.total || 0;
@@ -117,6 +122,10 @@ export function UserPortalPage() {
       setFormError(`Description must be at most ${DESCRIPTION_MAX} characters`);
       return;
     }
+    if (form.requestType === 'ASSET' && form.selectedAssets.length === 0) {
+      setFormError('Select at least one asset');
+      return;
+    }
 
     try {
       await createRequestMutation.mutateAsync({
@@ -124,6 +133,9 @@ export function UserPortalPage() {
         title,
         location,
         description,
+        ...(form.requestType === 'ASSET'
+          ? { selectedAssets: form.selectedAssets }
+          : {}),
       });
       setForm(emptyForm);
       setShowForm(false);
@@ -290,7 +302,10 @@ export function UserPortalPage() {
                       type="checkbox"
                       checked={form.requestType === 'ASSET'}
                       onChange={() =>
-                        setForm({ ...form, requestType: 'ASSET' })
+                        setForm({
+                          ...form,
+                          requestType: 'ASSET',
+                        })
                       }
                     />
                     Asset request
@@ -300,13 +315,51 @@ export function UserPortalPage() {
                       type="checkbox"
                       checked={form.requestType === 'IT_SUPPORT'}
                       onChange={() =>
-                        setForm({ ...form, requestType: 'IT_SUPPORT' })
+                        setForm({
+                          ...form,
+                          requestType: 'IT_SUPPORT',
+                          selectedAssets: [],
+                        })
                       }
                     />
                     IT support ticket
                   </label>
                 </div>
               </fieldset>
+
+              {form.requestType === 'ASSET' ? (
+                <label>
+                  Assets
+                  <select
+                    multiple
+                    className="asset-multi-select"
+                    value={form.selectedAssets}
+                    onChange={(e) => {
+                      const selected = Array.from(
+                        e.target.selectedOptions,
+                        (option) => option.value,
+                      );
+                      setForm({ ...form, selectedAssets: selected });
+                    }}
+                    required
+                    size={Math.min(6, Math.max(3, activeAssets.length || 3))}
+                    disabled={assetsPending || activeAssets.length === 0}
+                  >
+                    {activeAssets.map((asset) => (
+                      <option key={asset} value={asset}>
+                        {asset}
+                      </option>
+                    ))}
+                  </select>
+                  <span className="field-hint-left">
+                    {assetsPending
+                      ? 'Loading assets…'
+                      : activeAssets.length === 0
+                        ? 'No active assets available'
+                        : 'Hold Ctrl (Windows) or Cmd (Mac) to select multiple'}
+                  </span>
+                </label>
+              ) : null}
 
               <label>
                 Title

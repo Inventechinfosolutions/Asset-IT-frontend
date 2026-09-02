@@ -10,7 +10,7 @@ export function useLogin() {
   return useMutation({
     mutationFn: (credentials: LoginInput) => login(credentials),
     onSuccess: (user) => {
-      toast.success(`Welcome back, ${user.name || user.username}!`);
+      toast.success(`Welcome back, ${user.name || user.aliasName}!`);
     },
     onError: (err: Error) => {
       toast.error(err.message || 'Login failed. Please check your credentials.');
