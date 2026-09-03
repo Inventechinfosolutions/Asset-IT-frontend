@@ -10,7 +10,7 @@ import { formatRequestStatus, statusBadgeClass } from '../utils/format-status';
 export function UserPortalPage() {
   const navigate = useNavigate();
   const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(5);
+  const [limit, setLimit] = useState(10);
   const [searchInput, setSearchInput] = useState('');
   const [search, setSearch] = useState('');
 

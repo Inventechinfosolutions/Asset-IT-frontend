@@ -22,7 +22,7 @@ const REQUEST_TYPE_FILTERS: { value: RequestTypeFilter; label: string }[] = [
 export function AdminRequestsPage() {
   const navigate = useNavigate();
   const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(5);
+  const [limit, setLimit] = useState(10);
   const [searchInput, setSearchInput] = useState('');
   const [search, setSearch] = useState('');
   const [requestTypeFilter, setRequestTypeFilter] =
@@ -176,7 +176,7 @@ export function AdminRequestsPage() {
                       </td>
                       <td>
                         <span className="cell-name">
-                          {r.user?.aliasName || r.user?.name || '—'}
+                          {r.user?.name || r.user?.aliasName || '—'}
                         </span>
                       </td>
                       <td>

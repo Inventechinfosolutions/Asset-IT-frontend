@@ -247,7 +247,7 @@ export function RequestDetailPage({ isAdmin = false }: RequestDetailPageProps) {
               <>
                 {request.adminComment ? (
                   <div className="raise-field">
-                    <span className="raise-field-label">comment</span>
+                    <span className="raise-field-label">Comment</span>
                     <div className="raise-readonly-box raise-readonly-box-tall">
                       {request.adminComment}
                     </div>
