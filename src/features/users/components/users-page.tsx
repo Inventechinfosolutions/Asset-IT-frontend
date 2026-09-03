@@ -25,7 +25,7 @@ const EMPLOYMENT_TYPE_FILTERS: {
 
 export function UsersPage() {
   const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(10);
+  const limit = 10;
   const [searchInput, setSearchInput] = useState('');
   const [search, setSearch] = useState('');
   const [showInactive, setShowInactive] = useState(false);
@@ -90,11 +90,6 @@ export function UsersPage() {
   const selectedFilterLabel =
     EMPLOYMENT_TYPE_FILTERS.find((item) => item.value === employmentTypeFilter)
       ?.label || 'All';
-
-  function onLimitChange(nextLimit: number) {
-    setPage(1);
-    setLimit(nextLimit);
-  }
 
   function openCreateForm() {
     setEditingUser(null);
@@ -239,6 +234,7 @@ export function UsersPage() {
               <table className="data-table">
                 <thead>
                   <tr>
+                    <th>S.No</th>
                     <th>Name</th>
                     <th>Emp No</th>
                     <th>Department</th>
@@ -249,8 +245,9 @@ export function UsersPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {users.map((u) => (
+                  {users.map((u, index) => (
                     <tr key={u.id}>
+                      <td>{(page - 1) * limit + index + 1}</td>
                       <td>
                         <span className="cell-name">
                           {[u.firstName || u.name, u.lastName]
@@ -351,7 +348,6 @@ export function UsersPage() {
               total={total}
               limit={limit}
               onPageChange={setPage}
-              onLimitChange={onLimitChange}
             />
           </>
         )}

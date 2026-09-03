@@ -22,7 +22,7 @@ const REQUEST_TYPE_FILTERS: { value: RequestTypeFilter; label: string }[] = [
 export function AdminRequestsPage() {
   const navigate = useNavigate();
   const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(10);
+  const limit = 10;
   const [searchInput, setSearchInput] = useState('');
   const [search, setSearch] = useState('');
   const [requestTypeFilter, setRequestTypeFilter] =
@@ -72,11 +72,6 @@ export function AdminRequestsPage() {
   const selectedFilterLabel =
     REQUEST_TYPE_FILTERS.find((item) => item.value === requestTypeFilter)
       ?.label || 'All';
-
-  function onLimitChange(nextLimit: number) {
-    setPage(1);
-    setLimit(nextLimit);
-  }
 
   return (
     <div className="page">
@@ -154,7 +149,8 @@ export function AdminRequestsPage() {
               <table className="data-table">
                 <thead>
                   <tr>
-                    <th>Request ID</th>
+                    <th>S.No</th>
+                    <th>Request</th>
                     <th>User</th>
                     <th>Emp No</th>
                     <th>Department</th>
@@ -167,8 +163,9 @@ export function AdminRequestsPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {requests.map((r) => (
+                  {requests.map((r, index) => (
                     <tr key={r.id}>
+                      <td>{(page - 1) * limit + index + 1}</td>
                       <td>
                         <span className="cell-mono">
                           {r.requestCode || `REQ-${String(r.id).padStart(2, '0')}`}
@@ -241,7 +238,6 @@ export function AdminRequestsPage() {
               total={total}
               limit={limit}
               onPageChange={setPage}
-              onLimitChange={onLimitChange}
             />
           </>
         )}

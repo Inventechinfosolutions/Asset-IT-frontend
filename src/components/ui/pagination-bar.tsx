@@ -4,11 +4,7 @@ export interface PaginationBarProps {
   total: number;
   limit: number;
   onPageChange: (page: number) => void;
-  onLimitChange?: (limit: number) => void;
-  limitOptions?: number[];
 }
-
-const DEFAULT_LIMIT_OPTIONS = [5, 10, 15];
 
 export function PaginationBar({
   page,
@@ -16,8 +12,6 @@ export function PaginationBar({
   total,
   limit,
   onPageChange,
-  onLimitChange,
-  limitOptions = DEFAULT_LIMIT_OPTIONS,
 }: PaginationBarProps) {
   if (total === 0) return null;
 
@@ -30,22 +24,6 @@ export function PaginationBar({
         <p className="muted pagination-info">
           Showing {from}–{to} of {total}
         </p>
-        {onLimitChange ? (
-          <label className="pagination-limit">
-            <span>Per page</span>
-            <select
-              value={limit}
-              onChange={(e) => onLimitChange(Number(e.target.value))}
-              aria-label="Items per page"
-            >
-              {limitOptions.map((option) => (
-                <option key={option} value={option}>
-                  {option}
-                </option>
-              ))}
-            </select>
-          </label>
-        ) : null}
       </div>
       <div className="pagination-controls">
         <button

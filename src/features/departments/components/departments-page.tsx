@@ -12,7 +12,7 @@ import type { Department } from '../types/department';
 
 export function DepartmentsPage() {
   const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(10);
+  const limit = 10;
   const [searchInput, setSearchInput] = useState('');
   const [search, setSearch] = useState('');
   const [showInactive, setShowInactive] = useState(false);
@@ -42,11 +42,6 @@ export function DepartmentsPage() {
 
   const isMutating =
     createDepartmentMutation.isPending || updateDepartmentMutation.isPending;
-
-  function onLimitChange(nextLimit: number) {
-    setPage(1);
-    setLimit(nextLimit);
-  }
 
   function openCreateForm() {
     setEditingDepartment(null);
@@ -132,14 +127,16 @@ export function DepartmentsPage() {
               <table className="data-table">
                 <thead>
                   <tr>
+                    <th>S.No</th>
                     <th>Department</th>
                     <th>Status</th>
                     <th>Action</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {departments.map((department) => (
+                  {departments.map((department, index) => (
                     <tr key={department.id}>
+                      <td>{(page - 1) * limit + index + 1}</td>
                       <td>
                         <span className="cell-name">{department.name}</span>
                       </td>
@@ -189,7 +186,6 @@ export function DepartmentsPage() {
               total={total}
               limit={limit}
               onPageChange={setPage}
-              onLimitChange={onLimitChange}
             />
           </>
         )}

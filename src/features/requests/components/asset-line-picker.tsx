@@ -41,6 +41,7 @@ export function AssetLinesTable({
       <table className="asset-line-table">
         <thead>
           <tr>
+            <th>S.No</th>
             <th>Asset</th>
             <th>Quantity</th>
           </tr>
@@ -48,6 +49,7 @@ export function AssetLinesTable({
         <tbody>
           {rows.map((row, index) => (
             <tr key={`${row.assetType}-${row.name}-${index}`}>
+              <td>{index + 1}</td>
               <td>{row.name}</td>
               <td>
                 {editable ? (

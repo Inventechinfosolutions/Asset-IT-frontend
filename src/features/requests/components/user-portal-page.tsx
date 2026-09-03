@@ -10,7 +10,7 @@ import { formatRequestStatus, statusBadgeClass } from '../utils/format-status';
 export function UserPortalPage() {
   const navigate = useNavigate();
   const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(10);
+  const limit = 10;
   const [searchInput, setSearchInput] = useState('');
   const [search, setSearch] = useState('');
 
@@ -31,11 +31,6 @@ export function UserPortalPage() {
   const requests = data?.data || [];
   const total = data?.total || 0;
   const totalPages = data?.totalPages || 1;
-
-  function onLimitChange(nextLimit: number) {
-    setPage(1);
-    setLimit(nextLimit);
-  }
 
   return (
     <div className="page">
@@ -77,7 +72,8 @@ export function UserPortalPage() {
               <table className="data-table">
                 <thead>
                   <tr>
-                    <th>Request ID</th>
+                    <th>S.No</th>
+                    <th>Request</th>
                     <th>Type</th>
                     <th>Title</th>
                     <th>Address</th>
@@ -88,8 +84,9 @@ export function UserPortalPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {requests.map((r) => (
+                  {requests.map((r, index) => (
                     <tr key={r.id}>
+                      <td>{(page - 1) * limit + index + 1}</td>
                       <td>
                         <span className="cell-mono">
                           {r.requestCode || `REQ-${String(r.id).padStart(2, '0')}`}
@@ -151,7 +148,6 @@ export function UserPortalPage() {
               total={total}
               limit={limit}
               onPageChange={setPage}
-              onLimitChange={onLimitChange}
             />
           </>
         )}
