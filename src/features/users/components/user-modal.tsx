@@ -271,7 +271,7 @@ export function UserModal({
           </label>
 
           <label>
-            Alias Name
+            Alias Name/User ID
             <input
               type="text"
               value={form.aliasName}
