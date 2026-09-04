@@ -5,12 +5,19 @@ export const requestStatusSchema = z.enum([
   'APPROVED',
   'REJECTED',
   'IN_PROGRESS',
+  'PENDING_USER',
+  'PENDING_VENDOR',
+  'ON_HOLD',
   'RESOLVED',
   'CLOSED',
   'FULFILLED',
 ]);
 
 export const updateableRequestStatusSchema = z.enum([
+  'IN_PROGRESS',
+  'PENDING_USER',
+  'PENDING_VENDOR',
+  'ON_HOLD',
   'FULFILLED',
   'REJECTED',
   'RESOLVED',

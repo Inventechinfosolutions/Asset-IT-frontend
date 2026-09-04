@@ -5,7 +5,12 @@ import { AssetLinesTable } from './asset-line-picker';
 import { useUpdateRequestStatus } from '../hooks/use-request-mutations';
 import { useMyRequestDetail, useRequestDetail } from '../hooks/use-requests';
 import type { UpdateableRequestStatus } from '../types/request';
-import { formatRequestStatus, statusBadgeClass } from '../utils/format-status';
+import {
+  canTakeRequestAction,
+  formatRequestStatus,
+  statusBadgeClass,
+  WORKFLOW_STATUS_OPTIONS,
+} from '../utils/format-status';
 
 interface RequestDetailPageProps {
   isAdmin?: boolean;
@@ -187,7 +192,7 @@ export function RequestDetailPage({ isAdmin = false }: RequestDetailPageProps) {
               </div>
             </div>
 
-            {isAdmin && request.status === 'SUBMITTED' ? (
+            {isAdmin && canTakeRequestAction(request.status) ? (
               <form className="status-action-form raise-status-form" onSubmit={onSaveStatus}>
                 <label>
                   Update status
@@ -201,6 +206,11 @@ export function RequestDetailPage({ isAdmin = false }: RequestDetailPageProps) {
                     required
                   >
                     <option value="">Select status</option>
+                    {WORKFLOW_STATUS_OPTIONS.map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
                     {isAsset ? (
                       <>
                         <option value="FULFILLED">Mark as Fulfilled</option>

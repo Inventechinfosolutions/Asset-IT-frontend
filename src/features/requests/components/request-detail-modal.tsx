@@ -3,7 +3,12 @@ import { useState, type FormEvent, useEffect } from 'react';
 import { useUpdateRequestStatus } from '../hooks/use-request-mutations';
 import { useMyRequestDetail, useRequestDetail } from '../hooks/use-requests';
 import type { UpdateableRequestStatus } from '../types/request';
-import { formatRequestStatus, statusBadgeClass } from '../utils/format-status';
+import {
+  canTakeRequestAction,
+  formatRequestStatus,
+  statusBadgeClass,
+  WORKFLOW_STATUS_OPTIONS,
+} from '../utils/format-status';
 import { AssetLinesTable } from './asset-line-picker';
 
 interface RequestDetailModalProps {
@@ -230,7 +235,7 @@ export function RequestDetailModal({
                 ) : null}
               </div>
 
-              {isAdmin && request.status === 'SUBMITTED' ? (
+              {isAdmin && canTakeRequestAction(request.status) ? (
                 <div className="detail-action-footer">
                   <form className="status-action-form" onSubmit={onSaveStatus}>
                     <label>
@@ -245,6 +250,11 @@ export function RequestDetailModal({
                         required
                       >
                         <option value="">Select status</option>
+                        {WORKFLOW_STATUS_OPTIONS.map((option) => (
+                          <option key={option.value} value={option.value}>
+                            {option.label}
+                          </option>
+                        ))}
                         {isAsset ? (
                           <>
                             <option value="FULFILLED">Mark as Fulfilled</option>

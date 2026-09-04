@@ -3723,6 +3723,21 @@ body.nav-lock {
   color: #4338ca;
 }
 
+.badge-pending-user {
+  background: rgba(14, 165, 233, 0.14);
+  color: #0369a1;
+}
+
+.badge-pending-vendor {
+  background: rgba(168, 85, 247, 0.14);
+  color: #7e22ce;
+}
+
+.badge-on-hold {
+  background: rgba(245, 158, 11, 0.16);
+  color: #b45309;
+}
+
 .badge-it {
   background: rgba(13, 148, 136, 0.14);
   color: #0f766e;
