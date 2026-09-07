@@ -11,4 +11,7 @@ export type ListQueryParams = {
   limit?: number;
   search?: string;
   requestType?: 'ASSET' | 'IT_SUPPORT';
+  status?: string;
+  unassigned?: boolean;
+  assigneeId?: string;
 };

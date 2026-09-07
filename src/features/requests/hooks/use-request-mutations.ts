@@ -5,6 +5,7 @@ import { notificationsKeys } from '@/features/notifications';
 
 import {
   createSupportRequestApi,
+  assignRequestApi,
   updateRequestStatusApi,
 } from '../api/requests-api';
 import { requestsKeys } from '../keys/requests-keys';
@@ -30,6 +31,31 @@ export function useCreateRequest() {
     },
     onError: (err: Error) => {
       toast.error(err.message || 'Submit failed');
+    },
+  });
+}
+
+export function useAssignRequest() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({
+      id,
+      assigneeId,
+    }: {
+      id: number;
+      assigneeId: string;
+    }) => assignRequestApi(id, assigneeId),
+    onSuccess: (updated) => {
+      queryClient.invalidateQueries({ queryKey: requestsKeys.lists() });
+      queryClient.invalidateQueries({
+        queryKey: requestsKeys.adminDetail(updated.id),
+      });
+      queryClient.invalidateQueries({ queryKey: notificationsKeys.all });
+      toast.success('Ticket assigned successfully');
+    },
+    onError: (err: Error) => {
+      toast.error(err.message || 'Failed to assign ticket');
     },
   });
 }

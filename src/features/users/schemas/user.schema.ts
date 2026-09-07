@@ -1,6 +1,7 @@
 import { z } from 'zod';
 
 export const employmentTypeSchema = z.enum(['Permanent', 'Contract']);
+export const userRoleSchema = z.enum(['USER', 'TICKET_ASSIGNEE', 'ADMIN']);
 
 export const managedUserSchema = z.object({
   id: z.string(),
@@ -11,7 +12,7 @@ export const managedUserSchema = z.object({
   department: z.string().optional().default(''),
   employmentType: employmentTypeSchema.optional().default('Permanent'),
   aliasName: z.string(),
-  role: z.string(),
+  role: userRoleSchema.or(z.string()),
   empNo: z.string().nullable().optional(),
   isActive: z.boolean(),
   createdAt: z.string().optional(),
@@ -36,6 +37,7 @@ export const createUserSchema = z.object({
     .string()
     .regex(/^[6-9]\d{9}$/, 'Enter a valid 10-digit mobile number')
     .optional(),
+  role: userRoleSchema,
   isActive: z.boolean(),
 });
 
@@ -50,5 +52,6 @@ export const updateUserSchema = z.object({
     .string()
     .regex(/^[6-9]\d{9}$/, 'Enter a valid 10-digit mobile number')
     .optional(),
+  role: userRoleSchema,
   isActive: z.boolean(),
 });

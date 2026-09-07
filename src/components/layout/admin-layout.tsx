@@ -3,7 +3,7 @@ import { NavLink, Navigate, Outlet, useLocation } from 'react-router-dom';
 
 import bdaLogo from '@/assets/bda-logo.jpg';
 import userIcon from '@/assets/user-icon-on-transparent-background-free-png.webp';
-import { useAuth } from '@/features/auth';
+import { useAuth, isFullAdmin } from '@/features/auth';
 import { NotificationBell } from '@/features/notifications';
 
 import { HeaderDateTime } from './header-date-time';
@@ -36,6 +36,8 @@ export function AdminLayout() {
   if (!user) {
     return <Navigate to="/login" replace />;
   }
+
+  const showAdminNav = isFullAdmin(user.role);
 
   return (
     <div className={`admin-shell${navOpen ? ' nav-open' : ''}`}>
@@ -91,43 +93,66 @@ export function AdminLayout() {
 
       <aside className="sidebar" id="admin-sidebar">
         <nav className="sidebar-nav">
-          <NavLink
-            to="/dashboard"
-            end
-            className={({ isActive }) =>
-              isActive ? 'nav-link active' : 'nav-link'
-            }
-          >
-            <DashboardIcon className="nav-link-icon" />
-            Dashboard
-          </NavLink>
-          <NavLink
-            to="/users"
-            className={({ isActive }) =>
-              isActive ? 'nav-link active' : 'nav-link'
-            }
-          >
-            <UsersIcon className="nav-link-icon" />
-            Users
-          </NavLink>
-          <NavLink
-            to="/departments"
-            className={({ isActive }) =>
-              isActive ? 'nav-link active' : 'nav-link'
-            }
-          >
-            <DepartmentsIcon className="nav-link-icon" />
-            Departments
-          </NavLink>
-          <NavLink
-            to="/requests"
-            className={({ isActive }) =>
-              isActive ? 'nav-link active' : 'nav-link'
-            }
-          >
-            <RequestsIcon className="nav-link-icon" />
-            Pending Requests
-          </NavLink>
+          {showAdminNav ? (
+            <>
+              <NavLink
+                to="/dashboard"
+                end
+                className={({ isActive }) =>
+                  isActive ? 'nav-link active' : 'nav-link'
+                }
+              >
+                <DashboardIcon className="nav-link-icon" />
+                Dashboard
+              </NavLink>
+              <NavLink
+                to="/users"
+                className={({ isActive }) =>
+                  isActive ? 'nav-link active' : 'nav-link'
+                }
+              >
+                <UsersIcon className="nav-link-icon" />
+                Users
+              </NavLink>
+              <NavLink
+                to="/departments"
+                className={({ isActive }) =>
+                  isActive ? 'nav-link active' : 'nav-link'
+                }
+              >
+                <DepartmentsIcon className="nav-link-icon" />
+                Departments
+              </NavLink>
+              <NavLink
+                to="/pending-tickets"
+                className={({ isActive }) =>
+                  isActive ? 'nav-link active' : 'nav-link'
+                }
+              >
+                <RequestsIcon className="nav-link-icon" />
+                Pending Tickets
+              </NavLink>
+              <NavLink
+                to="/assign-tickets"
+                className={({ isActive }) =>
+                  isActive ? 'nav-link active' : 'nav-link'
+                }
+              >
+                <RequestsIcon className="nav-link-icon" />
+                Assign Tickets
+              </NavLink>
+            </>
+          ) : (
+            <NavLink
+              to="/requests"
+              className={({ isActive }) =>
+                isActive ? 'nav-link active' : 'nav-link'
+              }
+            >
+              <RequestsIcon className="nav-link-icon" />
+              Pending Requests
+            </NavLink>
+          )}
         </nav>
 
         <div className="sidebar-footer">

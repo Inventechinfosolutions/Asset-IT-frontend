@@ -1,5 +1,7 @@
 import { useState, type FormEvent } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
+
+import { useAuth, isFullAdmin } from '@/features/auth';
 
 import { AssetLinesTable } from './asset-line-picker';
 import { useUpdateRequestStatus } from '../hooks/use-request-mutations';
@@ -19,6 +21,8 @@ interface RequestDetailPageProps {
 export function RequestDetailPage({ isAdmin = false }: RequestDetailPageProps) {
   const { id } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
+  const { user } = useAuth();
   const requestId = Number(id);
 
   const [selectedStatus, setSelectedStatus] = useState<
@@ -33,7 +37,30 @@ export function RequestDetailPage({ isAdmin = false }: RequestDetailPageProps) {
   const { data: request, isPending, isError, error } = query;
   const updateStatusMutation = useUpdateRequestStatus();
 
-  const backTo = isAdmin ? '/requests' : '/portal';
+  const isTicketAssignee = user?.role === 'TICKET_ASSIGNEE';
+  const isAssignedToMe =
+    isTicketAssignee &&
+    !!user &&
+    (request?.assigneeId === user.id || request?.assignee?.id === user.id);
+  const canUpdateStatus =
+    isAdmin &&
+    isTicketAssignee &&
+    isAssignedToMe &&
+    !!request &&
+    canTakeRequestAction(request.status);
+
+  const locationFrom =
+    typeof (location.state as { from?: unknown } | null)?.from === 'string'
+      ? (location.state as { from: string }).from
+      : null;
+  const backTo = isAdmin
+    ? isFullAdmin(user?.role || '')
+      ? locationFrom === '/assign-tickets' ||
+        locationFrom === '/pending-tickets'
+        ? locationFrom
+        : '/pending-tickets'
+      : '/requests'
+    : '/portal';
   const isAsset = request?.requestType === 'ASSET';
 
   async function onSaveStatus(e: FormEvent) {
@@ -68,9 +95,11 @@ export function RequestDetailPage({ isAdmin = false }: RequestDetailPageProps) {
         <div>
           <h1>Request Details</h1>
           <p className="muted">
-            {isAdmin
+            {canUpdateStatus
               ? 'Review request details and take action'
-              : 'View your submitted request'}
+              : isAdmin
+                ? 'View request details'
+                : 'View your submitted request'}
           </p>
         </div>
       </div>
@@ -139,6 +168,16 @@ export function RequestDetailPage({ isAdmin = false }: RequestDetailPageProps) {
                   </span>
                 </div>
               ) : null}
+              {isAdmin ? (
+                <div className="raise-meta-item">
+                  <span className="raise-field-label">Assignee</span>
+                  <span className="raise-meta-value">
+                    {request.assignee?.name ||
+                      request.assignee?.aliasName ||
+                      'Unassigned'}
+                  </span>
+                </div>
+              ) : null}
             </div>
 
             <div
@@ -192,8 +231,11 @@ export function RequestDetailPage({ isAdmin = false }: RequestDetailPageProps) {
               </div>
             </div>
 
-            {isAdmin && canTakeRequestAction(request.status) ? (
-              <form className="status-action-form raise-status-form" onSubmit={onSaveStatus}>
+            {canUpdateStatus ? (
+              <form
+                className="status-action-form raise-status-form"
+                onSubmit={onSaveStatus}
+              >
                 <label>
                   Update status
                   <select

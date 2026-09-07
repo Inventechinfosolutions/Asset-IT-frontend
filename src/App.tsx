@@ -7,12 +7,15 @@ import {
   homePathForRole,
   LoginPage,
   RequireAdmin,
+  RequireFullAdmin,
   RequireUser,
   useAuth,
 } from '@/features/auth';
 import { DashboardHomePage } from '@/features/dashboard';
 import {
+  AdminPendingTicketsPage,
   AdminRequestsPage,
+  AssignTicketsPage,
   RaiseRequestPage,
   RequestDetailPage,
   UserPortalPage,
@@ -45,15 +48,44 @@ export default function App() {
             }
           >
             <Route path="/dashboard" element={<DashboardHomePage />} />
-            <Route path="/users" element={<UsersPage />} />
-            <Route path="/departments" element={<DepartmentsPage />} />
+            <Route
+              path="/users"
+              element={
+                <RequireFullAdmin>
+                  <UsersPage />
+                </RequireFullAdmin>
+              }
+            />
+            <Route
+              path="/departments"
+              element={
+                <RequireFullAdmin>
+                  <DepartmentsPage />
+                </RequireFullAdmin>
+              }
+            />
+            <Route
+              path="/pending-tickets"
+              element={
+                <RequireFullAdmin>
+                  <AdminPendingTicketsPage />
+                </RequireFullAdmin>
+              }
+            />
+            <Route
+              path="/assign-tickets"
+              element={
+                <RequireFullAdmin>
+                  <AssignTicketsPage />
+                </RequireFullAdmin>
+              }
+            />
             <Route path="/requests" element={<AdminRequestsPage />} />
             <Route
               path="/requests/:id"
               element={<RequestDetailPage isAdmin />}
             />
           </Route>
-
           <Route
             element={
               <RequireUser>

@@ -58,7 +58,18 @@ export const supportRequestSchema = z.object({
 });
 
 export const adminSupportRequestSchema = supportRequestSchema.extend({
+  assigneeId: z.string().nullable().optional(),
   user: z
+    .object({
+      id: z.string(),
+      name: z.string().optional().default(''),
+      aliasName: z.string(),
+      department: z.string().optional().default(''),
+      empNo: z.string().nullable().optional().default(''),
+    })
+    .nullable()
+    .optional(),
+  assignee: z
     .object({
       id: z.string(),
       name: z.string().optional().default(''),

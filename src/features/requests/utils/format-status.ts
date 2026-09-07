@@ -1,7 +1,7 @@
 import type { UpdateableRequestStatus } from '../types/request';
 
 export function formatRequestStatus(status: string): string {
-  if (status === 'SUBMITTED') return 'Submitted';
+  if (status === 'SUBMITTED') return 'Pending';
   if (status === 'FULFILLED' || status === 'APPROVED') return 'Fulfilled';
   if (status === 'REJECTED') return 'Rejected';
   if (status === 'RESOLVED') return 'Resolved';

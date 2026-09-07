@@ -1,13 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { PaginationBar } from '@/components/ui/pagination-bar';
-import { useAuth, isFullAdmin } from '@/features/auth';
 
-import { ActionIcon, EyeIcon } from './request-action-icons';
+import { EyeIcon } from './request-action-icons';
 import { useAllRequests } from '../hooks/use-requests';
 import {
-  canTakeRequestAction,
   formatRequestStatus,
   statusBadgeClass,
 } from '../utils/format-status';
@@ -44,10 +42,8 @@ const STATUS_FILTERS: { value: StatusFilter; label: string }[] = [
   { value: 'CLOSED', label: 'Closed' },
 ];
 
-export function AdminRequestsPage() {
+export function AdminPendingTicketsPage() {
   const navigate = useNavigate();
-  const { user } = useAuth();
-  const canHandleTickets = user?.role === 'TICKET_ASSIGNEE';
   const [page, setPage] = useState(1);
   const limit = 10;
   const [searchInput, setSearchInput] = useState('');
@@ -59,9 +55,6 @@ export function AdminRequestsPage() {
   const [statusFilterOpen, setStatusFilterOpen] = useState(false);
   const typeFilterRef = useRef<HTMLDivElement>(null);
   const statusFilterRef = useRef<HTMLDivElement>(null);
-
-  const redirectToAssign =
-    !!user && isFullAdmin(user.role);
 
   useEffect(() => {
     const timer = window.setTimeout(() => {
@@ -107,10 +100,6 @@ export function AdminRequestsPage() {
     status: statusFilter || undefined,
   });
 
-  if (redirectToAssign) {
-    return <Navigate to="/assign-tickets" replace />;
-  }
-
   const requests = data?.data || [];
   const total = data?.total || 0;
   const totalPages = data?.totalPages || 1;
@@ -130,9 +119,10 @@ export function AdminRequestsPage() {
       ) : null}
 
       <section className="panel">
-        <h2>Pending Requests</h2>
+        <h2>Pending Tickets</h2>
         <p className="muted" style={{ marginTop: '-0.35rem' }}>
-          Tickets assigned to you. Update status from the request details page.
+          View all tickets and their assignment status. Use Assign Tickets to
+          assign unassigned requests.
         </p>
         <div className="table-toolbar">
           <input
@@ -167,7 +157,10 @@ export function AdminRequestsPage() {
               </svg>
             </button>
             {statusFilterOpen ? (
-              <div className="table-filter-menu form-department-menu" role="listbox">
+              <div
+                className="table-filter-menu form-department-menu"
+                role="listbox"
+              >
                 {STATUS_FILTERS.map((item) => (
                   <button
                     key={item.label}
@@ -246,7 +239,7 @@ export function AdminRequestsPage() {
         {isPending ? (
           <p className="muted">Loading…</p>
         ) : requests.length === 0 ? (
-          <p className="muted">No requests assigned to you.</p>
+          <p className="muted">No pending tickets found.</p>
         ) : (
           <>
             <div className="table-wrap">
@@ -262,6 +255,7 @@ export function AdminRequestsPage() {
                     <th>Title</th>
                     <th>Zone</th>
                     <th>Status</th>
+                    <th>Assignee</th>
                     <th>Date</th>
                     <th>Action</th>
                   </tr>
@@ -272,7 +266,8 @@ export function AdminRequestsPage() {
                       <td>{(page - 1) * limit + index + 1}</td>
                       <td>
                         <span className="cell-mono">
-                          {r.requestCode || `REQ-${String(r.id).padStart(2, '0')}`}
+                          {r.requestCode ||
+                            `REQ-${String(r.id).padStart(2, '0')}`}
                         </span>
                       </td>
                       <td>
@@ -304,6 +299,9 @@ export function AdminRequestsPage() {
                           {formatRequestStatus(r.status)}
                         </span>
                       </td>
+                      <td>
+                        {r.assignee?.name || r.assignee?.aliasName || '—'}
+                      </td>
                       <td className="cell-muted">
                         {new Date(r.createdAt).toLocaleString()}
                       </td>
@@ -312,23 +310,16 @@ export function AdminRequestsPage() {
                           <button
                             type="button"
                             className="btn-icon"
-                            onClick={() => navigate(`/requests/${r.id}`)}
+                            onClick={() =>
+                              navigate(`/requests/${r.id}`, {
+                                state: { from: '/pending-tickets' },
+                              })
+                            }
                             aria-label={`View request ${r.id}`}
                             title="View"
                           >
                             <EyeIcon />
                           </button>
-                          {canHandleTickets && canTakeRequestAction(r.status) ? (
-                            <button
-                              type="button"
-                              className="btn-icon btn-icon-action"
-                              onClick={() => navigate(`/requests/${r.id}`)}
-                              aria-label={`Update request ${r.id}`}
-                              title="Take action"
-                            >
-                              <ActionIcon />
-                            </button>
-                          ) : null}
                         </div>
                       </td>
                     </tr>

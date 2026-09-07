@@ -11,6 +11,7 @@ import {
 } from '../hooks/use-user-mutations';
 import { useUsers } from '../hooks/use-users';
 import type { ManagedUser } from '../types/user';
+import { formatUserRole } from '@/features/auth';
 
 type EmploymentTypeFilter = '' | 'Permanent' | 'Contract';
 
@@ -114,6 +115,7 @@ export function UsersPage() {
     employmentType: 'Permanent' | 'Contract';
     empNo?: string;
     mobile?: string;
+    role: 'USER' | 'TICKET_ASSIGNEE' | 'ADMIN';
     isActive: boolean;
   }) {
     if (editingUser) {
@@ -238,6 +240,7 @@ export function UsersPage() {
                     <th>Name</th>
                     <th>Emp No</th>
                     <th>Department</th>
+                    <th>Role</th>
                     <th>Type</th>
                     <th>Mobile</th>
                     <th>Status</th>
@@ -259,6 +262,11 @@ export function UsersPage() {
                         <span className="cell-mono">{u.empNo || '—'}</span>
                       </td>
                       <td>{u.department || '—'}</td>
+                      <td>
+                        <span className="badge badge-contract">
+                          {formatUserRole(u.role)}
+                        </span>
+                      </td>
                       <td>
                         {u.employmentType === 'Permanent' ||
                         u.employmentType === 'Contract' ? (

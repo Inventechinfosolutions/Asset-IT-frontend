@@ -1,4 +1,6 @@
 export { AdminRequestsPage } from './components/admin-requests-page';
+export { AdminPendingTicketsPage } from './components/admin-pending-tickets-page';
+export { AssignTicketsPage } from './components/assign-tickets-page';
 export { UserPortalPage } from './components/user-portal-page';
 export { RaiseRequestPage } from './components/raise-request-page';
 export { RequestDetailPage } from './components/request-detail-page';
@@ -12,6 +14,7 @@ export {
 } from './hooks/use-requests';
 export {
   useCreateRequest,
+  useAssignRequest,
   useUpdateRequestStatus,
 } from './hooks/use-request-mutations';
 export {

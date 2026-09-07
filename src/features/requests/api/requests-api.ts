@@ -22,6 +22,10 @@ function toQueryString(params: ListQueryParams = {}): string {
   if (params.limit) q.set('limit', String(params.limit));
   if (params.search?.trim()) q.set('search', params.search.trim());
   if (params.requestType) q.set('requestType', params.requestType);
+  if (params.status) q.set('status', params.status);
+  if (params.unassigned === true) q.set('unassigned', 'true');
+  if (params.unassigned === false) q.set('unassigned', 'false');
+  if (params.assigneeId) q.set('assigneeId', params.assigneeId);
   const str = q.toString();
   return str ? `?${str}` : '';
 }
@@ -78,4 +82,15 @@ export async function updateRequestStatusApi(
     body: JSON.stringify({ status, comment }),
   });
   return supportRequestSchema.parse(data);
+}
+
+export async function assignRequestApi(
+  id: number,
+  assigneeId: string,
+): Promise<AdminSupportRequest> {
+  const data = await apiClient<AdminSupportRequest>(`/requests/${id}/assign`, {
+    method: 'PATCH',
+    body: JSON.stringify({ assigneeId }),
+  });
+  return adminSupportRequestSchema.parse(data);
 }

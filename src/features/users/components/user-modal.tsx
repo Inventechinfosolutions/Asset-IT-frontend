@@ -15,6 +15,7 @@ interface UserModalProps {
     employmentType: 'Permanent' | 'Contract';
     empNo?: string;
     mobile?: string;
+    role: 'USER' | 'TICKET_ASSIGNEE' | 'ADMIN';
     isActive: boolean;
   }) => Promise<void>;
   isLoading: boolean;
@@ -35,6 +36,7 @@ const emptyForm = {
   employmentType: 'Permanent' as 'Permanent' | 'Contract',
   empNo: '',
   mobile: '',
+  role: 'USER' as 'USER' | 'TICKET_ASSIGNEE' | 'ADMIN',
   isActive: true,
 };
 
@@ -72,6 +74,11 @@ export function UserModal({
             : 'Permanent',
         empNo: editingUser.empNo || '',
         mobile: editingUser.mobile || '',
+        role:
+          editingUser.role === 'ADMIN' ||
+          editingUser.role === 'TICKET_ASSIGNEE'
+            ? editingUser.role
+            : 'USER',
         isActive: editingUser.isActive,
       });
     } else {
@@ -166,6 +173,11 @@ export function UserModal({
       return;
     }
 
+    if (!form.role) {
+      setFormError('Role is required');
+      return;
+    }
+
     if (isPermanent && !empNo) {
       setFormError('Employee number is required for permanent staff');
       return;
@@ -187,6 +199,7 @@ export function UserModal({
         aliasName,
         department,
         employmentType: form.employmentType,
+        role: form.role,
         isActive: form.isActive,
         ...(lastName ? { lastName } : {}),
         ...(isPermanent ? { empNo } : {}),
@@ -366,6 +379,38 @@ export function UserModal({
                   )}
                 </div>
               ) : null}
+            </div>
+          </div>
+
+          <div className="form-field-group">
+            <span className="form-field-label">Role</span>
+            <div className="check-row">
+              <label className="check">
+                <input
+                  type="checkbox"
+                  checked={form.role === 'USER'}
+                  onChange={() => setForm({ ...form, role: 'USER' })}
+                />
+                User
+              </label>
+              <label className="check">
+                <input
+                  type="checkbox"
+                  checked={form.role === 'TICKET_ASSIGNEE'}
+                  onChange={() =>
+                    setForm({ ...form, role: 'TICKET_ASSIGNEE' })
+                  }
+                />
+                Ticket Assignee
+              </label>
+              <label className="check">
+                <input
+                  type="checkbox"
+                  checked={form.role === 'ADMIN'}
+                  onChange={() => setForm({ ...form, role: 'ADMIN' })}
+                />
+                Admin
+              </label>
             </div>
           </div>
 

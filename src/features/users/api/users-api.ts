@@ -23,6 +23,9 @@ function toQueryString(params: UsersListQueryParams = {}): string {
   if (params.employmentType) {
     q.set('employmentType', params.employmentType);
   }
+  if (params.role) {
+    q.set('role', params.role);
+  }
   const str = q.toString();
   return str ? `?${str}` : '';
 }
