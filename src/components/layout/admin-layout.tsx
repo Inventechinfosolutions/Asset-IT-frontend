@@ -134,7 +134,7 @@ export function AdminLayout() {
                 }
               >
                 <RequestsIcon className="nav-link-icon" />
-                Pending Tickets
+                ALL Tickets
               </NavLink>
               <NavLink
                 to="/assign-tickets"

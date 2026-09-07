@@ -55,6 +55,19 @@ export function canTakeRequestAction(status: string): boolean {
   return OPEN_REQUEST_STATUSES.has(status);
 }
 
+const TERMINAL_REQUEST_STATUSES = new Set([
+  'FULFILLED',
+  'APPROVED',
+  'REJECTED',
+  'RESOLVED',
+  'CLOSED',
+]);
+
+/** Admin may assign/reassign only while the ticket is not finished. */
+export function canAssignRequest(status: string): boolean {
+  return !TERMINAL_REQUEST_STATUSES.has(status);
+}
+
 export const WORKFLOW_STATUS_OPTIONS: {
   value: UpdateableRequestStatus;
   label: string;

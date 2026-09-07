@@ -10,7 +10,7 @@ import { useAssignRequest } from '../hooks/use-request-mutations';
 import { useAllRequests } from '../hooks/use-requests';
 import type { AdminSupportRequest } from '../types/request';
 import {
-  canTakeRequestAction,
+  canAssignRequest,
   formatRequestStatus,
   statusBadgeClass,
 } from '../utils/format-status';
@@ -139,7 +139,7 @@ export function AssignTicketsPage() {
       <section className="panel">
         <h2>Assign Tickets</h2>
         <p className="muted" style={{ marginTop: '-0.35rem' }}>
-          Assign submitted tickets to a Ticket Assignee. Assignees handle status
+          Assign pending tickets to a Ticket Assignee. Assignees handle status
           updates.
         </p>
         <div className="table-toolbar">
@@ -275,10 +275,7 @@ export function AssignTicketsPage() {
                 </thead>
                 <tbody>
                   {requests.map((r, index) => {
-                    const canAssign =
-                      canTakeRequestAction(r.status) &&
-                      !r.assigneeId &&
-                      !r.assignee;
+                    const canAssign = canAssignRequest(r.status);
                     return (
                       <tr key={r.id}>
                         <td>{(page - 1) * limit + index + 1}</td>

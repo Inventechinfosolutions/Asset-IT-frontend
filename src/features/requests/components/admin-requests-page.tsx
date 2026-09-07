@@ -32,7 +32,7 @@ const REQUEST_TYPE_FILTERS: { value: RequestTypeFilter; label: string }[] = [
 ];
 
 const STATUS_FILTERS: { value: StatusFilter; label: string }[] = [
-  { value: '', label: 'All statuses' },
+  { value: '', label: 'All Status' },
   { value: 'SUBMITTED', label: 'Pending' },
   { value: 'IN_PROGRESS', label: 'In Progress' },
   { value: 'PENDING_USER', label: 'Pending User' },
@@ -119,7 +119,7 @@ export function AdminRequestsPage() {
       ?.label || 'All types';
   const selectedStatusLabel =
     STATUS_FILTERS.find((item) => item.value === statusFilter)?.label ||
-    'All statuses';
+    'All Status';
 
   return (
     <div className="page">

@@ -28,6 +28,7 @@ export {
   formatRequestStatus,
   statusBadgeClass,
   canTakeRequestAction,
+  canAssignRequest,
 } from './utils/format-status';
 export type {
   RequestStatus,

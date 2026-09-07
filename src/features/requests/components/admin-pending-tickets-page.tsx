@@ -30,7 +30,7 @@ const REQUEST_TYPE_FILTERS: { value: RequestTypeFilter; label: string }[] = [
 ];
 
 const STATUS_FILTERS: { value: StatusFilter; label: string }[] = [
-  { value: '', label: 'All statuses' },
+  { value: '', label: 'All Status' },
   { value: 'SUBMITTED', label: 'Pending' },
   { value: 'IN_PROGRESS', label: 'In Progress' },
   { value: 'PENDING_USER', label: 'Pending User' },
@@ -108,7 +108,7 @@ export function AdminPendingTicketsPage() {
       ?.label || 'All types';
   const selectedStatusLabel =
     STATUS_FILTERS.find((item) => item.value === statusFilter)?.label ||
-    'All statuses';
+    'All Status';
 
   return (
     <div className="page">
@@ -119,10 +119,9 @@ export function AdminPendingTicketsPage() {
       ) : null}
 
       <section className="panel">
-        <h2>Pending Tickets</h2>
+        <h2>ALL Tickets</h2>
         <p className="muted" style={{ marginTop: '-0.35rem' }}>
-          View all tickets and their assignment status. Use Assign Tickets to
-          assign unassigned requests.
+          View all tickets and their assignment status.
         </p>
         <div className="table-toolbar">
           <input
