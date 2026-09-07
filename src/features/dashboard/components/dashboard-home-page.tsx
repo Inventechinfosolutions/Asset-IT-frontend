@@ -1,5 +1,6 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { toast } from 'sonner';
 
 import { useAuth } from '@/features/auth';
 import { useAllRequests, type AdminSupportRequest } from '@/features/requests';
@@ -7,6 +8,7 @@ import { useUsers } from '@/features/users';
 
 import { DonutChart } from './donut-chart';
 import { LineChart } from './line-chart';
+import { downloadTicketDetailsExcel } from '../utils/export-ticket-details-excel';
 
 const MONTHS = [
   'Jan',
@@ -90,6 +92,7 @@ interface RealActivityItem {
 
 export function DashboardHomePage() {
   const { user } = useAuth();
+  const [isExporting, setIsExporting] = useState(false);
 
   const {
     data: requestsData,
@@ -298,6 +301,25 @@ export function DashboardHomePage() {
     year: 'numeric',
   });
 
+  async function onDownloadExcel() {
+    if (isExporting) return;
+    setIsExporting(true);
+    try {
+      const count = await downloadTicketDetailsExcel();
+      toast.success(
+        count > 0
+          ? `Downloaded ${count} ticket${count === 1 ? '' : 's'} to Excel`
+          : 'Excel downloaded (no tickets found)',
+      );
+    } catch (err) {
+      toast.error(
+        err instanceof Error ? err.message : 'Failed to download Excel',
+      );
+    } finally {
+      setIsExporting(false);
+    }
+  }
+
   return (
     <div className="page dash-page">
       {/* Top Banner Hero */}
@@ -500,9 +522,32 @@ export function DashboardHomePage() {
             />
           )}
           <div className="dash-status-footer">
-            <Link to="/requests" className="dash-outline-link-btn">
+            <Link to="/pending-tickets" className="dash-outline-link-btn">
               View Full Report &rarr;
             </Link>
+            <button
+              type="button"
+              className="dash-outline-link-btn dash-export-btn"
+              onClick={onDownloadExcel}
+              disabled={isExporting || loading}
+            >
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="7 10 12 15 17 10" />
+                <line x1="12" y1="15" x2="12" y2="3" />
+              </svg>
+              {isExporting ? 'Downloading…' : 'Download Excel'}
+            </button>
           </div>
         </section>
 

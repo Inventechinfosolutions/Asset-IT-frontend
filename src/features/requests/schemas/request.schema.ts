@@ -55,6 +55,7 @@ export const supportRequestSchema = z.object({
   selectedAssets: selectedAssetsSchema,
   adminComment: z.string().nullable().optional(),
   createdAt: z.string(),
+  updatedAt: z.string().optional(),
 });
 
 export const adminSupportRequestSchema = supportRequestSchema.extend({

@@ -3034,12 +3034,16 @@ body.nav-lock {
   margin-top: 0.4rem;
   padding-top: 0.4rem;
   display: flex;
-  justify-content: flex-start;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  flex-wrap: wrap;
 }
 
 .dash-outline-link-btn {
   display: inline-flex;
   align-items: center;
+  gap: 0.35rem;
   padding: 0.32rem 0.75rem;
   border: 1px solid #cbd5e1;
   border-radius: 8px;
@@ -3049,11 +3053,22 @@ body.nav-lock {
   color: #0256cc;
   text-decoration: none;
   transition: all 0.15s ease;
+  cursor: pointer;
 }
 
-.dash-outline-link-btn:hover {
+.dash-outline-link-btn:hover:not(:disabled) {
   background: #f8fafc;
   border-color: #94a3b8;
+}
+
+.dash-outline-link-btn:disabled,
+.dash-export-btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.dash-export-btn {
+  margin-left: auto;
 }
 
 /* Quick Actions Cards */
