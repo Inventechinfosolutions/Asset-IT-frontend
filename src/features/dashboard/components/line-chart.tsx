@@ -174,9 +174,13 @@ export function LineChart({
               <path d="M9 7a3 3 0 0 1 6 0" />
             </svg>
           </span>
-          <strong>Asset Requests</strong>
-          <b>{assetThisMonth}</b>
-          <span>This Month</span>
+          <div className="dash-chart-summary-copy">
+            <strong>Asset Requests</strong>
+            <div className="dash-chart-summary-meta">
+              <b>{assetThisMonth}</b>
+              <span>This Month</span>
+            </div>
+          </div>
         </div>
         <div className="dash-chart-summary-card it">
           <span className="dash-chart-summary-icon" aria-hidden="true">
@@ -192,9 +196,13 @@ export function LineChart({
               <path d="m9 9 6 6M15 9l-6 6" />
             </svg>
           </span>
-          <strong>IT Tickets</strong>
-          <b>{itThisMonth}</b>
-          <span>This Month</span>
+          <div className="dash-chart-summary-copy">
+            <strong>IT Tickets</strong>
+            <div className="dash-chart-summary-meta">
+              <b>{itThisMonth}</b>
+              <span>This Month</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>

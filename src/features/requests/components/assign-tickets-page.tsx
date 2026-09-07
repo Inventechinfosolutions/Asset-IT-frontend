@@ -10,6 +10,7 @@ import { useAssignRequest } from '../hooks/use-request-mutations';
 import { useAllRequests } from '../hooks/use-requests';
 import type { AdminSupportRequest } from '../types/request';
 import {
+  canTakeRequestAction,
   formatRequestStatus,
   statusBadgeClass,
 } from '../utils/format-status';
@@ -274,7 +275,10 @@ export function AssignTicketsPage() {
                 </thead>
                 <tbody>
                   {requests.map((r, index) => {
-                    const isUnassigned = !r.assigneeId && !r.assignee;
+                    const canAssign =
+                      canTakeRequestAction(r.status) &&
+                      !r.assigneeId &&
+                      !r.assignee;
                     return (
                       <tr key={r.id}>
                         <td>{(page - 1) * limit + index + 1}</td>
@@ -332,7 +336,7 @@ export function AssignTicketsPage() {
                             >
                               <EyeIcon />
                             </button>
-                            {isUnassigned ? (
+                            {canAssign ? (
                               <button
                                 type="button"
                                 className="btn-icon btn-icon-action"

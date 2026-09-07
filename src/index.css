@@ -3357,10 +3357,9 @@ body.nav-lock {
 }
 
 .dash-chart-summary-card {
-  display: grid;
-  grid-template-columns: auto 1fr auto auto;
+  display: flex;
   align-items: center;
-  gap: 0.45rem;
+  gap: 0.55rem;
   min-width: 0;
   padding: 0.65rem 0.75rem;
   border-radius: 9px;
@@ -3380,6 +3379,7 @@ body.nav-lock {
 .dash-chart-summary-icon {
   display: grid;
   place-items: center;
+  flex: 0 0 auto;
   width: 1rem;
   height: 1rem;
 }
@@ -3389,21 +3389,39 @@ body.nav-lock {
   height: 0.95rem;
 }
 
+.dash-chart-summary-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
 .dash-chart-summary-card strong {
   min-width: 0;
   color: #334155;
   font-size: 0.72rem;
-  white-space: nowrap;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+
+.dash-chart-summary-meta {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  min-width: 0;
 }
 
 .dash-chart-summary-card b {
   font-size: 0.85rem;
+  line-height: 1.2;
 }
 
-.dash-chart-summary-card > span:last-child {
+.dash-chart-summary-meta span {
   color: #64748b;
   font-size: 0.66rem;
-  white-space: nowrap;
+  line-height: 1.2;
 }
 
 .dash-grid-line {
@@ -4889,6 +4907,15 @@ button.table-filter-option.is-selected:hover:not(:disabled) {
   .dash-chart-svg {
     min-width: 0;
     width: 100%;
+  }
+
+  .dash-chart-summary {
+    grid-template-columns: 1fr;
+    gap: 0.55rem;
+  }
+
+  .dash-chart-summary-card {
+    padding: 0.7rem 0.8rem;
   }
 
   .dash-kpi-label {

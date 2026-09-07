@@ -15,6 +15,7 @@ export {
   homePathForRole,
   isAdminPortalRole,
   isFullAdmin,
+  portalLabelForRole,
 } from './utils/auth-paths';
 export { PasswordInput } from './components/password-input';
 export { authKeys } from './keys/auth-keys';

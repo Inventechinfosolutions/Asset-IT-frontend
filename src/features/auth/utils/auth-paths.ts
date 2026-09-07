@@ -18,3 +18,10 @@ export function formatUserRole(role: string): string {
   if (role === 'USER') return 'User';
   return role;
 }
+
+export function portalLabelForRole(role: string): string {
+  if (role === 'ADMIN') return 'Admin Portal';
+  if (role === 'TICKET_ASSIGNEE') return 'Ticket Assignee Portal';
+  if (role === 'USER') return 'User Portal';
+  return 'Portal';
+}

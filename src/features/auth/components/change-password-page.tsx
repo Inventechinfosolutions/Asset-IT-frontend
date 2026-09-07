@@ -10,7 +10,7 @@ import { PasswordInput } from './password-input';
 import { useAuth } from '../hooks/use-auth';
 import { useChangePassword } from '../hooks/use-change-password';
 import { changePasswordInputSchema } from '../schemas/auth.schema';
-import { homePathForRole } from '../utils/auth-paths';
+import { homePathForRole, portalLabelForRole } from '../utils/auth-paths';
 
 export function ChangePasswordPage() {
   const { user, logout } = useAuth();
@@ -78,7 +78,7 @@ export function ChangePasswordPage() {
             <h1 className="login-top-portal">
               BDA Asset &amp; IT Request Management Portal
             </h1>
-            <span className="login-top-sub">Admin Portal</span>
+            <span className="login-top-sub">{portalLabelForRole(user.role)}</span>
           </div>
         </div>
       </header>

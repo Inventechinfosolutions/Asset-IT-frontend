@@ -3,7 +3,7 @@ import { NavLink, Navigate, Outlet, useLocation } from 'react-router-dom';
 
 import bdaLogo from '@/assets/bda-logo.jpg';
 import userIcon from '@/assets/user-icon-on-transparent-background-free-png.webp';
-import { useAuth } from '@/features/auth';
+import { useAuth, portalLabelForRole } from '@/features/auth';
 import { NotificationBell } from '@/features/notifications';
 
 import { HeaderDateTime } from './header-date-time';
@@ -64,7 +64,9 @@ export function UserLayout() {
               <strong className="shell-header-title">
                 BDA Asset &amp; IT Request Management Portal
               </strong>
-              <span className="shell-header-subtitle">User portal</span>
+              <span className="shell-header-subtitle">
+                {portalLabelForRole(user.role)}
+              </span>
             </div>
           </div>
         </div>
