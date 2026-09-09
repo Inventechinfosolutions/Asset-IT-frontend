@@ -8,7 +8,6 @@ import { useQueryClient } from '@tanstack/react-query';
 
 import { loginApi } from '../api/login';
 import { AuthContext } from '../hooks/use-auth';
-import { authKeys } from '../keys/auth-keys';
 import { notificationsKeys } from '@/features/notifications';
 import type { AuthUser, LoginInput } from '../types/auth';
 
@@ -45,7 +44,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const logout = useCallback(() => {
-    queryClient.removeQueries({ queryKey: authKeys.captchaRoot() });
     queryClient.removeQueries({ queryKey: notificationsKeys.all });
     localStorage.removeItem('accessToken');
     localStorage.removeItem('user');
