@@ -5,7 +5,7 @@ import type { AdminSupportRequest } from '@/features/requests';
 import { formatRequestStatus } from '@/features/requests';
 
 function formatRequestType(type: AdminSupportRequest['requestType']): string {
-  return type === 'ASSET' ? 'Asset' : 'IT Support';
+  return type === 'DEVICE' ? 'Device' : 'IT Support';
 }
 
 function formatAssets(request: AdminSupportRequest): string {

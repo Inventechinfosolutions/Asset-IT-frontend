@@ -62,7 +62,7 @@ export function UserLayout() {
                 Bangalore Development Authority
               </span>
               <strong className="shell-header-title">
-                BDA Asset &amp; IT Request Management Portal
+                BDA IT Request Management Portal
               </strong>
               <span className="shell-header-subtitle">
                 {portalLabelForRole(user.role)}

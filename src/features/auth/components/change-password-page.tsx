@@ -76,7 +76,7 @@ export function ChangePasswordPage() {
           <div className="login-top-titles">
             <span className="login-top-org">BANGALORE DEVELOPMENT AUTHORITY</span>
             <h1 className="login-top-portal">
-              BDA Asset &amp; IT Request Management Portal
+              BDA IT Request Management Portal
             </h1>
             <span className="login-top-sub">{portalLabelForRole(user.role)}</span>
           </div>
@@ -186,7 +186,7 @@ export function ChangePasswordPage() {
       <footer className="login-bottom-footer">
         <div className="login-footer-content">
           <p className="login-footer-left">
-            &copy; 2026 ASSET &amp; IT PORTAL - Bangalore Development Authority
+            &copy; 2026 IT PORTAL - Bangalore Development Authority
           </p>
           <div className="login-footer-right">
             <span>Designed &amp; Developed by</span>

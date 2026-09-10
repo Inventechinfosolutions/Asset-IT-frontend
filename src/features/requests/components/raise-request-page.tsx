@@ -17,7 +17,7 @@ const LOCATION_MAX = 500;
 const DESCRIPTION_MAX = 2000;
 
 const emptyForm = {
-  requestType: 'ASSET' as RequestType,
+  requestType: 'DEVICE' as RequestType,
   selectedAssets: [] as SelectedAssetLine[],
   title: '',
   zone: '',
@@ -34,11 +34,11 @@ export function RaiseRequestPage() {
 
   const createRequestMutation = useCreateRequest();
   const { data: activeAssets = [], isPending: assetsPending } = useActiveAssets(
-    form.requestType === 'ASSET',
+    form.requestType === 'DEVICE',
   );
   const { data: zones = [], isPending: zonesPending } = useZones();
 
-  const isAsset = form.requestType === 'ASSET';
+  const isDevice = form.requestType === 'DEVICE';
   const zoneDisabled = zonesPending || zones.length === 0;
   const zoneLabel = form.zone
     ? form.zone
@@ -100,7 +100,7 @@ export function RaiseRequestPage() {
       setFormError(`Description must be at most ${DESCRIPTION_MAX} characters`);
       return;
     }
-    if (isAsset && form.selectedAssets.length === 0) {
+    if (isDevice && form.selectedAssets.length === 0) {
       setFormError('Select at least one asset');
       return;
     }
@@ -112,7 +112,7 @@ export function RaiseRequestPage() {
         zone,
         location,
         description,
-        ...(isAsset ? { selectedAssets: form.selectedAssets } : {}),
+        ...(isDevice ? { selectedAssets: form.selectedAssets } : {}),
       });
       navigate('/portal');
     } catch (err) {
@@ -125,7 +125,7 @@ export function RaiseRequestPage() {
       <div className="page-header page-header-row">
         <div>
           <h1>Raise Request</h1>
-          <p className="muted">Submit a new asset or IT support request</p>
+          <p className="muted">Submit a new device or IT support request</p>
         </div>
         
       </div>
@@ -138,20 +138,20 @@ export function RaiseRequestPage() {
               <label className="check">
                 <input
                   type="checkbox"
-                  checked={isAsset}
+                  checked={isDevice}
                   onChange={() =>
                     setForm({
                       ...form,
-                      requestType: 'ASSET',
+                      requestType: 'DEVICE',
                     })
                   }
                 />
-                Asset request
+                Device request
               </label>
               <label className="check">
                 <input
                   type="checkbox"
-                  checked={!isAsset}
+                  checked={!isDevice}
                   onChange={() =>
                     setForm({
                       ...form,
@@ -167,15 +167,15 @@ export function RaiseRequestPage() {
 
           <div
             className={
-              isAsset
+              isDevice
                 ? 'raise-request-grid is-asset'
                 : 'raise-request-grid is-it'
             }
           >
-            {isAsset ? (
+            {isDevice ? (
               <div className="raise-field raise-field-assets">
                 <span className="raise-field-label">
-                  Assets<span className="req" aria-hidden="true">*</span>
+                  Devices<span className="req" aria-hidden="true">*</span>
                 </span>
                 <AssetLinePicker
                   options={activeAssets}
@@ -218,7 +218,7 @@ export function RaiseRequestPage() {
               />
             </label>
 
-            {isAsset && form.selectedAssets.length > 0 ? (
+            {isDevice && form.selectedAssets.length > 0 ? (
               <div className="raise-field raise-field-asset-table">
                 <AssetLinesTable
                   rows={form.selectedAssets}

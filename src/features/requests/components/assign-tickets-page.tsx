@@ -15,12 +15,12 @@ import {
   statusBadgeClass,
 } from '../utils/format-status';
 
-type RequestTypeFilter = '' | 'ASSET' | 'IT_SUPPORT';
+type RequestTypeFilter = '' | 'DEVICE' | 'IT_SUPPORT';
 type AssignmentFilter = 'unassigned' | 'assigned' | 'all';
 
 const REQUEST_TYPE_FILTERS: { value: RequestTypeFilter; label: string }[] = [
   { value: '', label: 'All types' },
-  { value: 'ASSET', label: 'Asset' },
+  { value: 'DEVICE', label: 'Device' },
   { value: 'IT_SUPPORT', label: 'IT Support' },
 ];
 
@@ -294,13 +294,13 @@ export function AssignTicketsPage() {
                         <td>
                           <span
                             className={
-                              r.requestType === 'ASSET'
+                              r.requestType === 'DEVICE'
                                 ? 'badge badge-permanent'
                                 : 'badge badge-it'
                             }
                           >
-                            {r.requestType === 'ASSET'
-                              ? 'Asset'
+                            {r.requestType === 'DEVICE'
+                              ? 'Device'
                               : 'IT Support'}
                           </span>
                         </td>

@@ -59,7 +59,7 @@ export function LoginPage() {
           />
           <div className="login-top-titles">
             <span className="login-top-org">BANGALORE DEVELOPMENT AUTHORITY</span>
-            <h1 className="login-top-portal">BDA Asset &amp; IT Request Management Portal</h1>
+            <h1 className="login-top-portal">BDA IT Request Management Portal</h1>
           </div>
         </div>
 
@@ -171,7 +171,7 @@ export function LoginPage() {
                 <path d="M16 3.13a4 4 0 0 1 0 7.75" />
               </svg>
             </span>
-            <span className="login-pill-text">Manage Asset &amp; IT requests</span>
+            <span className="login-pill-text">Manage IT requests</span>
           </div>
 
           <div className="login-feature-pill">
@@ -213,7 +213,7 @@ export function LoginPage() {
       <footer className="login-bottom-footer">
         <div className="login-footer-content">
           <p className="login-footer-left">
-            &copy; 2026 ASSET &amp; IT PORTAL - Bangalore Development Authority
+            &copy; 2026 IT PORTAL - Bangalore Development Authority
           </p>
           <div className="login-footer-right">
             <span>Designed &amp; Developed by</span>

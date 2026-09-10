@@ -167,7 +167,7 @@ export function DashboardHomePage() {
         requests.filter((r) => {
           const d = new Date(r.createdAt);
           return (
-            r.requestType === 'ASSET' &&
+            r.requestType === 'DEVICE' &&
             d.getFullYear() === m.year &&
             d.getMonth() === m.month
           );
@@ -185,7 +185,7 @@ export function DashboardHomePage() {
         }).length,
     );
     const assetThisMonth = requests.filter(
-      (r) => r.requestType === 'ASSET' && inMonth(r, thisMonth),
+      (r) => r.requestType === 'DEVICE' && inMonth(r, thisMonth),
     ).length;
     const itThisMonth = requests.filter(
       (r) => r.requestType === 'IT_SUPPORT' && inMonth(r, thisMonth),
@@ -220,9 +220,9 @@ export function DashboardHomePage() {
     const items: RealActivityItem[] = [];
 
     for (const r of reqs) {
-      const isAsset = r.requestType === 'ASSET';
-      const tag = isAsset ? `#AR-${r.id}` : `#IT-${r.id}`;
-      const typeLabel = isAsset ? 'Asset request' : 'IT ticket';
+      const isDevice = r.requestType === 'DEVICE';
+      const tag = isDevice ? `#AR-${r.id}` : `#IT-${r.id}`;
+      const typeLabel = isDevice ? 'Device request' : 'IT ticket';
       const d = new Date(r.createdAt);
       const ts = isNaN(d.getTime()) ? 0 : d.getTime();
 
@@ -488,7 +488,7 @@ export function DashboardHomePage() {
             <h2>Requests &amp; Tickets Overview</h2>
             <div className="dash-legend-inline">
               <span>
-                <i className="dash-swatch asset" /> Asset Requests
+                <i className="dash-swatch asset" /> Device Requests
               </span>
               <span>
                 <i className="dash-swatch it" /> IT Tickets

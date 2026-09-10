@@ -175,7 +175,7 @@ export function LineChart({
             </svg>
           </span>
           <div className="dash-chart-summary-copy">
-            <strong>Asset Requests</strong>
+            <strong>Device Requests</strong>
             <div className="dash-chart-summary-meta">
               <b>{assetThisMonth}</b>
               <span>This Month</span>

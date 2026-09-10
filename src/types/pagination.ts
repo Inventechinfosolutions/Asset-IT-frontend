@@ -10,7 +10,7 @@ export type ListQueryParams = {
   page?: number;
   limit?: number;
   search?: string;
-  requestType?: 'ASSET' | 'IT_SUPPORT';
+  requestType?: 'DEVICE' | 'IT_SUPPORT';
   status?: string;
   unassigned?: boolean;
   assigneeId?: string;

@@ -42,7 +42,7 @@ export function AssetLinesTable({
         <thead>
           <tr>
             <th>S.No</th>
-            <th>Asset</th>
+            <th>Device</th>
             <th>Quantity</th>
           </tr>
         </thead>
@@ -108,10 +108,10 @@ export function AssetLinePicker({
     selectedCount === 0
       ? loading
         ? 'Loading assets…'
-        : 'Select assets'
+        : 'Select devices'
       : selectedCount === 1
         ? value[0].name
-        : `${selectedCount} assets selected`;
+        : `${selectedCount} devices selected`;
 
   useEffect(() => {
     if (!open) return;
@@ -160,11 +160,11 @@ export function AssetLinePicker({
   function addOtherAsset() {
     const trimmed = otherName.trim();
     if (!trimmed) {
-      setLocalError('Enter asset name for Other');
+      setLocalError('Enter device name for Other');
       return;
     }
     if (trimmed.length > NAME_MAX) {
-      setLocalError(`Asset name must be at most ${NAME_MAX} characters`);
+      setLocalError(`Device name must be at most ${NAME_MAX} characters`);
       return;
     }
 
@@ -174,7 +174,7 @@ export function AssetLinePicker({
         row.name.toLowerCase() === trimmed.toLowerCase(),
     );
     if (exists) {
-      setLocalError('This asset name is already added');
+      setLocalError('This device name is already added');
       return;
     }
 
@@ -248,7 +248,7 @@ export function AssetLinePicker({
       {showOtherName ? (
         <label className="asset-line-other">
           <span className="raise-field-label">
-            Asset Name<span className="req" aria-hidden="true">*</span>
+            Device Name<span className="req" aria-hidden="true">*</span>
           </span>
           <div className="asset-line-other-row">
             <input
@@ -264,7 +264,7 @@ export function AssetLinePicker({
               }}
               disabled={controlsDisabled}
               maxLength={NAME_MAX}
-              placeholder="Enter asset name"
+              placeholder="Enter device name"
             />
             <button
               type="button"

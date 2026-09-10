@@ -61,7 +61,7 @@ export function RequestDetailPage({ isAdmin = false }: RequestDetailPageProps) {
         : '/pending-tickets'
       : '/requests'
     : '/portal';
-  const isAsset = request?.requestType === 'ASSET';
+  const isDevice = request?.requestType === 'DEVICE';
 
   async function onSaveStatus(e: FormEvent) {
     e.preventDefault();
@@ -132,13 +132,13 @@ export function RequestDetailPage({ isAdmin = false }: RequestDetailPageProps) {
               <span className="raise-request-section-label">Request type</span>
               <div className="raise-request-check-row">
                 <label className="check">
-                  <input type="checkbox" checked={isAsset} disabled readOnly />
-                  Asset request
+                  <input type="checkbox" checked={isDevice} disabled readOnly />
+                  Device request
                 </label>
                 <label className="check">
                   <input
                     type="checkbox"
-                    checked={!isAsset}
+                    checked={!isDevice}
                     disabled
                     readOnly
                   />
@@ -182,14 +182,14 @@ export function RequestDetailPage({ isAdmin = false }: RequestDetailPageProps) {
 
             <div
               className={
-                isAsset
+                isDevice
                   ? 'raise-request-grid is-asset is-readonly'
                   : 'raise-request-grid is-it is-readonly'
               }
             >
-              {isAsset ? (
+              {isDevice ? (
                 <div className="raise-field raise-field-assets">
-                  <span className="raise-field-label">Assets</span>
+                  <span className="raise-field-label">Devices</span>
                   <div className="raise-readonly-box">
                     {request.selectedAssets?.length
                       ? request.selectedAssets
@@ -205,7 +205,7 @@ export function RequestDetailPage({ isAdmin = false }: RequestDetailPageProps) {
                 <div className="raise-readonly-box">{request.title || '—'}</div>
               </div>
 
-              {isAsset && request.selectedAssets?.length ? (
+              {isDevice && request.selectedAssets?.length ? (
                 <div className="raise-field raise-field-asset-table">
                   <AssetLinesTable rows={request.selectedAssets} />
                 </div>
@@ -253,7 +253,7 @@ export function RequestDetailPage({ isAdmin = false }: RequestDetailPageProps) {
                         {option.label}
                       </option>
                     ))}
-                    {isAsset ? (
+                    {isDevice ? (
                       <>
                         <option value="FULFILLED">Mark as Fulfilled</option>
                         <option value="REJECTED">Rejected</option>

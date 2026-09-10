@@ -24,7 +24,7 @@ export const updateableRequestStatusSchema = z.enum([
   'CLOSED',
 ]);
 
-export const requestTypeSchema = z.enum(['ASSET', 'IT_SUPPORT']);
+export const requestTypeSchema = z.enum(['DEVICE', 'IT_SUPPORT']);
 
 export const selectedAssetLineSchema = z.object({
   assetType: z.string(),

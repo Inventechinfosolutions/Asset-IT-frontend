@@ -62,7 +62,7 @@ export function RequestDetailModal({
 
   if (!isOpen) return null;
 
-  const isAsset = request?.requestType === 'ASSET';
+  const isDevice = request?.requestType === 'DEVICE';
 
   async function onSaveStatus(e: FormEvent) {
     e.preventDefault();
@@ -165,12 +165,12 @@ export function RequestDetailModal({
                   <span className="detail-value">
                     <span
                       className={
-                        request.requestType === 'ASSET'
+                        request.requestType === 'DEVICE'
                           ? 'badge badge-permanent'
                           : 'badge badge-it'
                       }
                     >
-                      {request.requestType === 'ASSET' ? 'Asset' : 'IT Support'}
+                      {request.requestType === 'DEVICE' ? 'Device' : 'IT Support'}
                     </span>
                   </span>
                 </div>
@@ -223,9 +223,9 @@ export function RequestDetailModal({
                   </div>
                 </div>
 
-                {request.requestType === 'ASSET' ? (
+                {request.requestType === 'DEVICE' ? (
                   <div className="detail-field-group">
-                    <span className="detail-label">Assets</span>
+                    <span className="detail-label">Devices</span>
                     {request.selectedAssets?.length ? (
                       <AssetLinesTable rows={request.selectedAssets} />
                     ) : (
@@ -255,7 +255,7 @@ export function RequestDetailModal({
                             {option.label}
                           </option>
                         ))}
-                        {isAsset ? (
+                        {isDevice ? (
                           <>
                             <option value="FULFILLED">Mark as Fulfilled</option>
                             <option value="REJECTED">Rejected</option>

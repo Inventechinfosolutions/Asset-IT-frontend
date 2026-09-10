@@ -24,8 +24,8 @@ export function useCreateRequest() {
     onSuccess: (request) => {
       queryClient.invalidateQueries({ queryKey: requestsKeys.lists() });
       toast.success(
-        request.requestType === 'ASSET'
-          ? 'Asset request submitted successfully'
+        request.requestType === 'DEVICE'
+          ? 'Device request submitted successfully'
           : 'IT support ticket submitted successfully',
       );
     },

@@ -95,12 +95,12 @@ export function UserPortalPage() {
                       <td>
                         <span
                           className={
-                            r.requestType === 'ASSET'
+                            r.requestType === 'DEVICE'
                               ? 'badge badge-permanent'
                               : 'badge badge-it'
                           }
                         >
-                          {r.requestType === 'ASSET' ? 'Asset' : 'IT Support'}
+                          {r.requestType === 'DEVICE' ? 'Device' : 'IT Support'}
                         </span>
                       </td>
                       <td>
